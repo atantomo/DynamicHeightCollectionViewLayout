@@ -13,7 +13,7 @@ The use of auto layout outlet collection in the Interface Builder makes it possi
 * Layout switching
 * Append (single or multiple) new data with animation
 * Remove (single or multiple) existing data with animation
-* Customizable column count for portrait and/or landscape mode
+* Customizable column count for portrait and landscape mode
 * Customizable separator size
 
 ## Requirement
@@ -25,7 +25,7 @@ Any Xcode that can compile Swift 4.1.
 Drag the 'DynamicHeightCollectionViewLayout' folder into your project.
 
 ## Usage
-(Please see demo project under 'Demo' for more details)
+(Please see demo project under 'Demo' folder for more details)
 
 * Create an instance of `DynamicHeightCollectionViewLayout` and specify the type of cell that you want to use for measurement
 ```
