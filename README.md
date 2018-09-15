@@ -4,7 +4,7 @@ Smooth scrolling solution to UICollectionView cells with varying height. When ce
 
 This approach uses manual mathematical calculations (without any call to `systemLayoutSizeFittingSize:`) to allow calculations from the background thread if necessary.
 
-The use of auto layout outlet collection in the Interface Builder makes it possible to achieve this system -- no need to declare separate constants (or magic numbers), which greatly reduces maintenance cost. Calculated heights are cached wherever appropriate to minimize calculations.
+The use of auto layout outlet collection in the Interface Builder makes it possible to achieve this system -- there is no need to declare separate constants (or magic numbers) for margins and paddings, which greatly reduces maintenance cost. Calculated heights are cached wherever appropriate to minimize calculations.
 
 ## Features
 
