@@ -2,13 +2,13 @@
 
 Smooth scrolling solution to UICollectionView with varying height cells. When the cells in a row have different heights, the height of the shorter cells will be adjusted to the height of the tallest cell.
 
-This approach uses manual mathematical calculations (without any call to `systemLayoutSizeFittingSize:`) to allow calculations from background thread if necessary.
+This approach uses manual mathematical calculations (without any call to `systemLayoutSizeFittingSize:`) to allow calculations from the background thread if necessary.
 
 The use of auto layout outlet collection in the Interface Builder makes it possible to achieve this system -- there is no need to write separate constants (or magic numbers), which greatly reduces maintenance cost. Calculated heights are cached wherever appropriate to minimize redundant calculations.
 
 ## Features
 
-<img src="demo.gif" width="375" height="667" style="background-color: #f4f4f4;">
+<img src="demo.gif" width="375" height="667">
 
 * Layout switching
 * Append (single or multiple) new data with animation
