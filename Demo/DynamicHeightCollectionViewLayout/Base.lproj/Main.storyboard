@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14109" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14088"/>
+        <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <scenes>
+        <!--Dynamic Height Collection View Controller-->
+        <scene sceneID="tne-QT-ifu">
+            <objects>
+                <viewController id="BYZ-38-t0r" customClass="DynamicHeightCollectionViewController" customModule="DynamicHeightCollectionViewLayout" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="jqo-zn-Dci">
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                                <subviews>
+                                    <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="KRF-ec-pu4">
+                                        <rect key="frame" x="0.0" y="20" width="375" height="647"/>
+                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <collectionViewLayout key="collectionViewLayout" id="gTb-cp-c0K"/>
+                                        <cells/>
+                                    </collectionView>
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="hRC-5Y-ytG">
+                                        <rect key="frame" x="0.0" y="615" width="375" height="52"/>
+                                        <subviews>
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Srk-Aq-BSm" customClass="RoundedButton" customModule="DynamicHeightCollectionViewLayout" customModuleProvider="target">
+                                                <rect key="frame" x="8" y="4" width="44" height="44"/>
+                                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="width" secondItem="Srk-Aq-BSm" secondAttribute="height" id="FaV-2N-uHh"/>
+                                                    <constraint firstAttribute="width" constant="44" id="fgz-KX-kYj"/>
+                                                </constraints>
+                                                <state key="normal" image="icon-list"/>
+                                                <connections>
+                                                    <action selector="toggleLayoutButtonTapped:" destination="BYZ-38-t0r" eventType="touchUpInside" id="6Z6-WH-gU2"/>
+                                                </connections>
+                                            </button>
+                                            <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="ohj-Pz-Grw">
+                                                <rect key="frame" x="60" y="4" width="307" height="44"/>
+                                                <subviews>
+                                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="hZw-rT-3As" customClass="RoundedButton" customModule="DynamicHeightCollectionViewLayout" customModuleProvider="target">
+                                                        <rect key="frame" x="0.0" y="0.0" width="149.5" height="44"/>
+                                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                        <state key="normal" title="Add more"/>
+                                                        <connections>
+                                                            <action selector="addButtonTapped:" destination="BYZ-38-t0r" eventType="touchUpInside" id="HHp-nj-3pO"/>
+                                                        </connections>
+                                                    </button>
+                                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="FTC-X3-t57" customClass="RoundedButton" customModule="DynamicHeightCollectionViewLayout" customModuleProvider="target">
+                                                        <rect key="frame" x="157.5" y="0.0" width="149.5" height="44"/>
+                                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                        <color key="tintColor" red="1" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                                        <state key="normal" title="Delete selected"/>
+                                                        <connections>
+                                                            <action selector="deleteButtonTapped:" destination="BYZ-38-t0r" eventType="touchUpInside" id="kH1-BD-KhE"/>
+                                                        </connections>
+                                                    </button>
+                                                </subviews>
+                                                <constraints>
+                                                    <constraint firstAttribute="height" constant="44" id="zuO-Tw-zCl"/>
+                                                </constraints>
+                                            </stackView>
+                                        </subviews>
+                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <constraints>
+                                            <constraint firstItem="ohj-Pz-Grw" firstAttribute="top" secondItem="hRC-5Y-ytG" secondAttribute="top" constant="4" id="JN0-yw-2Tw"/>
+                                            <constraint firstItem="ohj-Pz-Grw" firstAttribute="leading" secondItem="Srk-Aq-BSm" secondAttribute="trailing" constant="8" id="WOS-G2-Ino"/>
+                                            <constraint firstItem="Srk-Aq-BSm" firstAttribute="leading" secondItem="hRC-5Y-ytG" secondAttribute="leading" constant="8" id="r7W-pi-BdE"/>
+                                            <constraint firstItem="Srk-Aq-BSm" firstAttribute="top" secondItem="hRC-5Y-ytG" secondAttribute="top" constant="4" id="wGa-6B-UK8"/>
+                                            <constraint firstAttribute="trailing" secondItem="ohj-Pz-Grw" secondAttribute="trailing" constant="8" id="yGg-7r-2gs"/>
+                                        </constraints>
+                                    </view>
+                                </subviews>
+                                <color key="backgroundColor" red="0.95686274509803915" green="0.95686274509803915" blue="0.95686274509803915" alpha="1" colorSpace="calibratedRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="trailing" secondItem="hRC-5Y-ytG" secondAttribute="trailing" id="LQH-mY-XQI"/>
+                                    <constraint firstItem="hRC-5Y-ytG" firstAttribute="leading" secondItem="jqo-zn-Dci" secondAttribute="leading" id="ZGs-YL-29M"/>
+                                </constraints>
+                            </view>
+                        </subviews>
+                        <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <constraints>
+                            <constraint firstItem="ohj-Pz-Grw" firstAttribute="bottom" secondItem="6Tk-OE-BBY" secondAttribute="bottom" constant="-4" id="1mz-DQ-lPK"/>
+                            <constraint firstItem="KRF-ec-pu4" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="22b-pT-wCh"/>
+                            <constraint firstItem="Srk-Aq-BSm" firstAttribute="bottom" secondItem="6Tk-OE-BBY" secondAttribute="bottom" constant="-4" id="Isw-DG-NEt"/>
+                            <constraint firstItem="KRF-ec-pu4" firstAttribute="trailing" secondItem="6Tk-OE-BBY" secondAttribute="trailing" id="KEr-gO-n5f"/>
+                            <constraint firstItem="jqo-zn-Dci" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="top" id="N5g-5Q-YoW"/>
+                            <constraint firstItem="hRC-5Y-ytG" firstAttribute="bottom" secondItem="jqo-zn-Dci" secondAttribute="bottom" id="RAf-X1-cmT"/>
+                            <constraint firstItem="jqo-zn-Dci" firstAttribute="trailing" secondItem="8bC-Xf-vdC" secondAttribute="trailing" id="U5Y-cl-k1r"/>
+                            <constraint firstItem="KRF-ec-pu4" firstAttribute="bottom" secondItem="6Tk-OE-BBY" secondAttribute="bottom" id="YED-J9-2bP"/>
+                            <constraint firstItem="jqo-zn-Dci" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="YrM-Vs-VBZ"/>
+                            <constraint firstAttribute="bottom" secondItem="jqo-zn-Dci" secondAttribute="bottom" id="uzw-0u-NZ9"/>
+                            <constraint firstItem="KRF-ec-pu4" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" id="wre-zW-bNo"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
+                    </view>
+                    <connections>
+                        <outlet property="bottomButtonContainer" destination="hRC-5Y-ytG" id="DA0-7K-Bum"/>
+                        <outlet property="collectionView" destination="KRF-ec-pu4" id="PMG-xf-wlq"/>
+                        <outlet property="deleteButton" destination="FTC-X3-t57" id="6pj-DK-fQE"/>
+                        <outlet property="toggleButton" destination="Srk-Aq-BSm" id="ZNI-AD-GVR"/>
+                        <outlet property="toggleButtonWidthConstraint" destination="fgz-KX-kYj" id="Qtc-XH-4EC"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
+            </objects>
+        </scene>
+    </scenes>
+    <resources>
+        <image name="icon-list" width="30" height="30"/>
+    </resources>
+</document>
