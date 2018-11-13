@@ -253,6 +253,8 @@ class DynamicHeightCollectionViewLayout<T: HeightCalculable>: UICollectionViewLa
             appendHeights(at: indexes)
         case .delete(let indexes):
             removeHeights(at: indexes)
+        case .update(let indexes):
+            updateHeight(at: indexes)
         case .set:
             break
         }
@@ -299,6 +301,29 @@ class DynamicHeightCollectionViewLayout<T: HeightCalculable>: UICollectionViewLa
         for index in indexes {
             cellHeights.remove(at: index)
         }
+
+        let newMinCellIndex = indexes.min() ?? 0
+        let deletionTopmostRowIndex = newMinCellIndex / columnCount
+
+        var recalculatedRowHeights = [CGFloat]()
+        let deletionTopmostLeftmostCellIndex = deletionTopmostRowIndex * columnCount
+        for i in stride(from: deletionTopmostLeftmostCellIndex, to: cellHeights.count, by: columnCount) {
+
+            let leftmostCellIndex = i
+            let rightmostCellIndex = (columnCount - 1) + i
+
+            let height = getMaxHeight(leftmostCellIndex: leftmostCellIndex, tentativeRightmostCellIndex: rightmostCellIndex, cellHeights: cellHeights)
+            recalculatedRowHeights.append(height)
+        }
+        let heights = Array(rowHeights[0..<deletionTopmostRowIndex]) + recalculatedRowHeights
+        rowHeights = heights
+    }
+
+    private func updateHeight(at indexes: [Int]) {
+        let index = indexes.first!
+
+        let height = measurementCell?.heightForWidth(width: cellWidth, model: models[index]) ?? 0
+        cellHeights[index] = height
 
         let newMinCellIndex = indexes.min() ?? 0
         let deletionTopmostRowIndex = newMinCellIndex / columnCount

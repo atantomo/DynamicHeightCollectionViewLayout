@@ -77,10 +77,12 @@ class DynamicHeightCollectionViewController: UIViewController {
         setupShadow()
 
         NotificationCenter.default.addObserver(self, selector: #selector(deleteCell(sender:)), name: Resources.NotificationName.deleteCell, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(updateCell(sender:)), name: Resources.NotificationName.updateCell, object: nil)
     }
 
     deinit {
         NotificationCenter.default.removeObserver(self, name: Resources.NotificationName.deleteCell, object: nil)
+        NotificationCenter.default.removeObserver(self, name: Resources.NotificationName.updateCell, object: nil)
     }
 
     @IBAction func toggleLayoutButtonTapped(_ sender: UIButton) {
@@ -146,6 +148,17 @@ class DynamicHeightCollectionViewController: UIViewController {
         }
         models.remove(at: [indexPath.item])
         collectionView.deleteItems(at: [indexPath])
+    }
+
+    @objc
+    func updateCell(sender: Notification) {
+        guard let button = sender.object as? UIButton,
+            let position = button.superview?.convert(button.center, to: collectionView),
+            let indexPath = collectionView.indexPathForItem(at: position) else {
+                return
+        }
+        models.update(at: indexPath.item, element: SampleEntity.updatedModel)
+        collectionView.reloadItems(at: [indexPath])
     }
 
     private func setupCollectionView() {

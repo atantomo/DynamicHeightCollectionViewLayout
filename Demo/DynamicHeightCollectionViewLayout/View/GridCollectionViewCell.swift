@@ -16,6 +16,7 @@ class GridCollectionViewCell: UICollectionViewCell {
     @IBOutlet var leftLabel: UILabel!
     @IBOutlet var rightLabel: UILabel!
     @IBOutlet var deleteButton: UIButton!
+    @IBOutlet var updateButton: UIButton!
 
     @IBOutlet var imageAspectConstraint: NSLayoutConstraint!
 
@@ -49,6 +50,10 @@ class GridCollectionViewCell: UICollectionViewCell {
 
     @IBAction func deleteButtonTapped(_ sender: Any) {
         NotificationCenter.default.post(name: Resources.NotificationName.deleteCell, object: deleteButton)
+    }
+
+    @IBAction func updateButtonTapped(_ sender: Any) {
+        NotificationCenter.default.post(name: Resources.NotificationName.updateCell, object: updateButton)
     }
 }
 

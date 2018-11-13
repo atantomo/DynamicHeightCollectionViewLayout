@@ -49,5 +49,13 @@ struct SampleEntity {
         }
         return models
     }()
-}
 
+    static var updatedModel: CellModel = {
+        let topText = "Updated Updated Updated Updated Updated Updated Updated Updated Updated Updated Updated"
+        let leftText = "Updated Updated Updated Updated Updated Updated Updated Updated Updated Updated Updated"
+        let rightText = "Updated Updated Updated Updated Updated Updated Updated Updated Updated Updated Updated"
+        let model = CellModel(topText: topText, leftText: leftText, rightText: rightText)
+        return model
+    }()
+
+}

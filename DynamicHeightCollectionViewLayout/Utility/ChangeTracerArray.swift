@@ -14,6 +14,7 @@ struct ChangeTracerArray<T> {
         case set
         case insert([Int])
         case delete([Int])
+        case update([Int])
     }
 
     private (set) var latestChange: Change = Change.set
@@ -50,6 +51,11 @@ struct ChangeTracerArray<T> {
         for index in sortedReversedIndexes {
             self.array.remove(at: index)
         }
+    }
+
+    mutating func update(at index: Int, element: T) {
+        latestChange = Change.update([index])
+        self.array[index] = element
     }
 
 }
