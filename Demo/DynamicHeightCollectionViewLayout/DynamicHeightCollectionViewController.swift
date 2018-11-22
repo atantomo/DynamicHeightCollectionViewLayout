@@ -17,15 +17,15 @@ class DynamicHeightCollectionViewController: UIViewController {
 
     @IBOutlet var toggleButtonWidthConstraint: NSLayoutConstraint!
 
-    private var models: ChangeTracerArray<CellModel> = ChangeTracerArray() {
+    private var models: ChangeTracerArray<HeightCalculableDataSource> = ChangeTracerArray() {
         didSet {
             gridLayout.models = models
             listLayout.models = models
         }
     }
 
-    private lazy var gridLayout: DynamicHeightCollectionViewLayout<GridCollectionViewCell> = {
-        let layout = DynamicHeightCollectionViewLayout<GridCollectionViewCell>()
+    private lazy var gridLayout: DynamicHeightCollectionViewLayout = {
+        let layout = DynamicHeightCollectionViewLayout()
         layout.measurementCell = gridMeasurementCell
         layout.portraitColumnCount = 2
         layout.landscapeColumnCount = 4
@@ -34,8 +34,8 @@ class DynamicHeightCollectionViewController: UIViewController {
         return layout
     }()
 
-    private lazy var listLayout: DynamicHeightCollectionViewLayout<ListCollectionViewCell> = {
-        let layout = DynamicHeightCollectionViewLayout<ListCollectionViewCell>()
+    private lazy var listLayout: DynamicHeightCollectionViewLayout = {
+        let layout = DynamicHeightCollectionViewLayout()
         layout.measurementCell = listMeasurementCell
         layout.portraitColumnCount = 1
         layout.landscapeColumnCount = 2
@@ -210,17 +210,19 @@ extension DynamicHeightCollectionViewController: UICollectionViewDataSource {
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let dequeuedCell = collectionView.dequeueReusableCell(withReuseIdentifier: identifier, for: indexPath)
-        if let cell = dequeuedCell as? GridCollectionViewCell {
-            cell.topLabel.text = models[indexPath.row].topText
-            cell.leftLabel.text = models[indexPath.row].leftText
-            cell.rightLabel.text = models[indexPath.row].rightText
+        if let cell = dequeuedCell as? GridCollectionViewCell,
+            let model = models[indexPath.item] as? CellModel {
+            cell.topLabel.text = model.topText
+            cell.leftLabel.text = model.leftText
+            cell.rightLabel.text = model.rightText
 
             return cell
         }
-        if let cell = dequeuedCell as? ListCollectionViewCell {
-            cell.topLabel.text = models[indexPath.row].topText
-            cell.leftLabel.text = models[indexPath.row].leftText
-            cell.rightLabel.text = models[indexPath.row].rightText
+        if let cell = dequeuedCell as? ListCollectionViewCell,
+            let model = models[indexPath.item] as? CellModel {
+            cell.topLabel.text = model.topText
+            cell.leftLabel.text = model.leftText
+            cell.rightLabel.text = model.rightText
 
             return cell
         }

@@ -8,7 +8,9 @@
 
 import UIKit
 
-struct CellModel {
+protocol HeightCalculableDataSource { }
+
+struct CellModel: HeightCalculableDataSource {
     var topText: String
     var leftText: String
     var rightText: String
@@ -50,12 +52,17 @@ struct SampleEntity {
         return models
     }()
 
-    static var updatedModel: CellModel = {
-        let topText = "Updated Updated Updated Updated Updated Updated Updated Updated Updated Updated Updated"
-        let leftText = "Updated Updated Updated Updated Updated Updated Updated Updated Updated Updated Updated"
-        let rightText = "Updated Updated Updated Updated Updated Updated Updated Updated Updated Updated Updated"
+    static var updatedModel: CellModel {
+        let joinUpTo = { (length: Int) -> String in
+            return SampleEntity.explodedSampleText[0..<length].joined(separator: " ")
+        }
+
+        let randomCounts = SampleEntity.textCounts.randomElement()!
+        let topText = joinUpTo(randomCounts.0)
+        let leftText = joinUpTo(randomCounts.1)
+        let rightText = joinUpTo(randomCounts.2)
         let model = CellModel(topText: topText, leftText: leftText, rightText: rightText)
         return model
-    }()
+    }
 
 }

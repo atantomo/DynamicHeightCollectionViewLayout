@@ -60,7 +60,10 @@ class ListCollectionViewCell: UICollectionViewCell {
 
 extension ListCollectionViewCell: HeightCalculable {
 
-    func heightForWidth(width: CGFloat, model: CellModel) -> CGFloat {
+    func heightForWidth<T>(width: CGFloat, model: T) -> CGFloat {
+        guard let model = model as? CellModel else {
+            return 0.0
+        }
         let imageHeight = imageWidth * imageAspectConstraint.multiplier + imageVerticalPadding
         let leftSum = imageHeight
 

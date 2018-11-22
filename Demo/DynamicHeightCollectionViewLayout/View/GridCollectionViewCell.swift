@@ -59,7 +59,10 @@ class GridCollectionViewCell: UICollectionViewCell {
 
 extension GridCollectionViewCell: HeightCalculable {
 
-    func heightForWidth(width: CGFloat, model: CellModel) -> CGFloat {
+    func heightForWidth<T>(width: CGFloat, model: T) -> CGFloat {
+        guard let model = model as? CellModel else {
+            return 0.0
+        }
         let imageHeight = width * imageAspectConstraint.multiplier
 
         let topLabelWidth = width - topLabelSidePadding

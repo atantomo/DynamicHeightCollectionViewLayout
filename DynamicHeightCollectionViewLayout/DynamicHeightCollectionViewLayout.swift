@@ -8,19 +8,17 @@
 
 import UIKit
 
-class DynamicHeightCollectionViewLayout<T: HeightCalculable>: UICollectionViewLayout {
+class DynamicHeightCollectionViewLayout: UICollectionViewLayout {
 
-    typealias HeightCalculableCell = T
-    typealias CalculationDataSupplier = HeightCalculableCell.T
     typealias CellIndexRange = (minColumnIndex: Int, maxColumnIndex: Int, minRowIndex: Int, maxRowIndex: Int)
 
-    var measurementCell: HeightCalculableCell?
+    var measurementCell: HeightCalculable?
     var portraitColumnCount: Int = 2
     var landscapeColumnCount: Int = 4
     var verticalSeparatorWidth: CGFloat = 1
     var horizontalSeparatorHeight: CGFloat = 1
 
-    var models: ChangeTracerArray<CalculationDataSupplier> = ChangeTracerArray<CalculationDataSupplier>() {
+    var models: ChangeTracerArray<HeightCalculableDataSource> = ChangeTracerArray<HeightCalculableDataSource>() {
         didSet {
             updateHeights()
         }
