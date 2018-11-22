@@ -1,6 +1,6 @@
 //
-//  DynamicHeightCollectionViewController.swift
-//  DynamicHeightCollectionViewLayout
+//  NormalizedHeightCollectionViewController.swift
+//  NormalizedHeightCollectionViewLayout
 //
 //  Created by Andrew Tantomo on 2018/09/11.
 //  Copyright © 2018 Andrew Tantomo. All rights reserved.
@@ -8,7 +8,7 @@
 
 import UIKit
 
-class DynamicHeightCollectionViewController: UIViewController {
+class NormalizedHeightCollectionViewController: UIViewController {
 
     @IBOutlet var bottomButtonContainer: UIView!
     @IBOutlet var collectionView: UICollectionView!
@@ -24,8 +24,8 @@ class DynamicHeightCollectionViewController: UIViewController {
         }
     }
 
-    private lazy var gridLayout: DynamicHeightCollectionViewLayout = {
-        let layout = DynamicHeightCollectionViewLayout()
+    private lazy var gridLayout: NormalizedHeightCollectionViewLayout = {
+        let layout = NormalizedHeightCollectionViewLayout()
         layout.measurementCell = gridMeasurementCell
         layout.portraitColumnCount = 2
         layout.landscapeColumnCount = 4
@@ -34,8 +34,8 @@ class DynamicHeightCollectionViewController: UIViewController {
         return layout
     }()
 
-    private lazy var listLayout: DynamicHeightCollectionViewLayout = {
-        let layout = DynamicHeightCollectionViewLayout()
+    private lazy var listLayout: NormalizedHeightCollectionViewLayout = {
+        let layout = NormalizedHeightCollectionViewLayout()
         layout.measurementCell = listMeasurementCell
         layout.portraitColumnCount = 1
         layout.landscapeColumnCount = 2
@@ -93,7 +93,7 @@ class DynamicHeightCollectionViewController: UIViewController {
 
         let image: UIImage
         let nextIdentifier: String
-        let nextLayout: DynamicHeightCollectionViewLayout
+        let nextLayout: NormalizedHeightCollectionViewLayout
 
         let isCurrentlyDisplayingGrid = (collectionView.collectionViewLayout == gridLayout)
         if isCurrentlyDisplayingGrid {
@@ -206,7 +206,7 @@ class DynamicHeightCollectionViewController: UIViewController {
 
 }
 
-extension DynamicHeightCollectionViewController: UICollectionViewDataSource {
+extension NormalizedHeightCollectionViewController: UICollectionViewDataSource {
 
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return models.count
@@ -235,7 +235,7 @@ extension DynamicHeightCollectionViewController: UICollectionViewDataSource {
 
 }
 
-extension DynamicHeightCollectionViewController: UICollectionViewDelegate {
+extension NormalizedHeightCollectionViewController: UICollectionViewDelegate {
 
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         syncDeleteButton()

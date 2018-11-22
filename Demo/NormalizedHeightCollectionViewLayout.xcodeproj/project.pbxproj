@@ -14,7 +14,7 @@
 		497541B0214A885A006CC7C0 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 497541AE214A885A006CC7C0 /* Main.storyboard */; };
 		497541B2214A885C006CC7C0 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 497541B1214A885C006CC7C0 /* Assets.xcassets */; };
 		497541B5214A885C006CC7C0 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 497541B3214A885C006CC7C0 /* LaunchScreen.storyboard */; };
-		497541BD214A8889006CC7C0 /* DynamicHeightCollectionViewLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 497541BC214A8889006CC7C0 /* DynamicHeightCollectionViewLayout.swift */; };
+		497541BD214A8889006CC7C0 /* NormalizedHeightCollectionViewLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 497541BC214A8889006CC7C0 /* NormalizedHeightCollectionViewLayout.swift */; };
 		497541C8214A88A7006CC7C0 /* ListCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 497541BE214A88A5006CC7C0 /* ListCollectionViewCell.xib */; };
 		497541C9214A88A7006CC7C0 /* Array+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 497541BF214A88A5006CC7C0 /* Array+Extension.swift */; };
 		497541CA214A88A7006CC7C0 /* TextHeightCalculator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 497541C0214A88A5006CC7C0 /* TextHeightCalculator.swift */; };
@@ -25,20 +25,20 @@
 		497541CF214A88A7006CC7C0 /* PlainCollectionReusableView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 497541C5214A88A6006CC7C0 /* PlainCollectionReusableView.xib */; };
 		497541D0214A88A7006CC7C0 /* PlainCollectionReusableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 497541C6214A88A6006CC7C0 /* PlainCollectionReusableView.swift */; };
 		497541D1214A88A7006CC7C0 /* ListCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 497541C7214A88A7006CC7C0 /* ListCollectionViewCell.swift */; };
-		497541D3214A88B9006CC7C0 /* DynamicHeightCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 497541D2214A88B9006CC7C0 /* DynamicHeightCollectionViewController.swift */; };
+		497541D3214A88B9006CC7C0 /* NormalizedHeightCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 497541D2214A88B9006CC7C0 /* NormalizedHeightCollectionViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		493699F5214B30A600DBBFAC /* Resources.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Resources.swift; sourceTree = "<group>"; };
 		493699F7214B37B900DBBFAC /* SampleEntity.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SampleEntity.swift; sourceTree = "<group>"; };
 		493699F9214B3C7500DBBFAC /* RoundedButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RoundedButton.swift; sourceTree = "<group>"; };
-		497541A7214A885A006CC7C0 /* DynamicHeightCollectionViewLayout.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = DynamicHeightCollectionViewLayout.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		497541A7214A885A006CC7C0 /* NormalizedHeightCollectionViewLayout.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = NormalizedHeightCollectionViewLayout.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		497541AA214A885A006CC7C0 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		497541AF214A885A006CC7C0 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		497541B1214A885C006CC7C0 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		497541B4214A885C006CC7C0 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		497541B6214A885C006CC7C0 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		497541BC214A8889006CC7C0 /* DynamicHeightCollectionViewLayout.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = DynamicHeightCollectionViewLayout.swift; path = ../../DynamicHeightCollectionViewLayout/DynamicHeightCollectionViewLayout.swift; sourceTree = "<group>"; };
+		497541BC214A8889006CC7C0 /* NormalizedHeightCollectionViewLayout.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = NormalizedHeightCollectionViewLayout.swift; path = ../../NormalizedHeightCollectionViewLayout/NormalizedHeightCollectionViewLayout.swift; sourceTree = "<group>"; };
 		497541BE214A88A5006CC7C0 /* ListCollectionViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ListCollectionViewCell.xib; sourceTree = "<group>"; };
 		497541BF214A88A5006CC7C0 /* Array+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Array+Extension.swift"; sourceTree = "<group>"; };
 		497541C0214A88A5006CC7C0 /* TextHeightCalculator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TextHeightCalculator.swift; sourceTree = "<group>"; };
@@ -49,7 +49,7 @@
 		497541C5214A88A6006CC7C0 /* PlainCollectionReusableView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PlainCollectionReusableView.xib; sourceTree = "<group>"; };
 		497541C6214A88A6006CC7C0 /* PlainCollectionReusableView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlainCollectionReusableView.swift; sourceTree = "<group>"; };
 		497541C7214A88A7006CC7C0 /* ListCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ListCollectionViewCell.swift; sourceTree = "<group>"; };
-		497541D2214A88B9006CC7C0 /* DynamicHeightCollectionViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DynamicHeightCollectionViewController.swift; sourceTree = "<group>"; };
+		497541D2214A88B9006CC7C0 /* NormalizedHeightCollectionViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NormalizedHeightCollectionViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -66,7 +66,7 @@
 		4975419E214A885A006CC7C0 = {
 			isa = PBXGroup;
 			children = (
-				497541A9214A885A006CC7C0 /* DynamicHeightCollectionViewLayout */,
+				497541A9214A885A006CC7C0 /* NormalizedHeightCollectionViewLayout */,
 				497541A8214A885A006CC7C0 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -74,12 +74,12 @@
 		497541A8214A885A006CC7C0 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				497541A7214A885A006CC7C0 /* DynamicHeightCollectionViewLayout.app */,
+				497541A7214A885A006CC7C0 /* NormalizedHeightCollectionViewLayout.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
 		};
-		497541A9214A885A006CC7C0 /* DynamicHeightCollectionViewLayout */ = {
+		497541A9214A885A006CC7C0 /* NormalizedHeightCollectionViewLayout */ = {
 			isa = PBXGroup;
 			children = (
 				497541D5214A8F95006CC7C0 /* Utility */,
@@ -87,14 +87,14 @@
 				493699F5214B30A600DBBFAC /* Resources.swift */,
 				497541AA214A885A006CC7C0 /* AppDelegate.swift */,
 				497541AE214A885A006CC7C0 /* Main.storyboard */,
-				497541D2214A88B9006CC7C0 /* DynamicHeightCollectionViewController.swift */,
-				497541BC214A8889006CC7C0 /* DynamicHeightCollectionViewLayout.swift */,
+				497541D2214A88B9006CC7C0 /* NormalizedHeightCollectionViewController.swift */,
+				497541BC214A8889006CC7C0 /* NormalizedHeightCollectionViewLayout.swift */,
 				493699F7214B37B900DBBFAC /* SampleEntity.swift */,
 				497541B1214A885C006CC7C0 /* Assets.xcassets */,
 				497541B3214A885C006CC7C0 /* LaunchScreen.storyboard */,
 				497541B6214A885C006CC7C0 /* Info.plist */,
 			);
-			path = DynamicHeightCollectionViewLayout;
+			path = NormalizedHeightCollectionViewLayout;
 			sourceTree = "<group>";
 		};
 		497541D4214A8F53006CC7C0 /* View */ = {
@@ -120,15 +120,15 @@
 				497541BF214A88A5006CC7C0 /* Array+Extension.swift */,
 			);
 			name = Utility;
-			path = ../../DynamicHeightCollectionViewLayout/Utility;
+			path = ../../NormalizedHeightCollectionViewLayout/Utility;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		497541A6214A885A006CC7C0 /* DynamicHeightCollectionViewLayout */ = {
+		497541A6214A885A006CC7C0 /* NormalizedHeightCollectionViewLayout */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 497541B9214A885C006CC7C0 /* Build configuration list for PBXNativeTarget "DynamicHeightCollectionViewLayout" */;
+			buildConfigurationList = 497541B9214A885C006CC7C0 /* Build configuration list for PBXNativeTarget "NormalizedHeightCollectionViewLayout" */;
 			buildPhases = (
 				497541A3214A885A006CC7C0 /* Sources */,
 				497541A4214A885A006CC7C0 /* Frameworks */,
@@ -138,9 +138,9 @@
 			);
 			dependencies = (
 			);
-			name = DynamicHeightCollectionViewLayout;
+			name = NormalizedHeightCollectionViewLayout;
 			productName = DynamicHeightCollectionViewLayout;
-			productReference = 497541A7214A885A006CC7C0 /* DynamicHeightCollectionViewLayout.app */;
+			productReference = 497541A7214A885A006CC7C0 /* NormalizedHeightCollectionViewLayout.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -158,7 +158,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 497541A2214A885A006CC7C0 /* Build configuration list for PBXProject "DynamicHeightCollectionViewLayout" */;
+			buildConfigurationList = 497541A2214A885A006CC7C0 /* Build configuration list for PBXProject "NormalizedHeightCollectionViewLayout" */;
 			compatibilityVersion = "Xcode 9.3";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
@@ -171,7 +171,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				497541A6214A885A006CC7C0 /* DynamicHeightCollectionViewLayout */,
+				497541A6214A885A006CC7C0 /* NormalizedHeightCollectionViewLayout */,
 			);
 		};
 /* End PBXProject section */
@@ -199,13 +199,13 @@
 			files = (
 				497541D0214A88A7006CC7C0 /* PlainCollectionReusableView.swift in Sources */,
 				497541AB214A885A006CC7C0 /* AppDelegate.swift in Sources */,
-				497541D3214A88B9006CC7C0 /* DynamicHeightCollectionViewController.swift in Sources */,
+				497541D3214A88B9006CC7C0 /* NormalizedHeightCollectionViewController.swift in Sources */,
 				497541CD214A88A7006CC7C0 /* HeightCalculable.swift in Sources */,
 				493699F8214B37B900DBBFAC /* SampleEntity.swift in Sources */,
 				497541CC214A88A7006CC7C0 /* ChangeTracerArray.swift in Sources */,
 				497541CA214A88A7006CC7C0 /* TextHeightCalculator.swift in Sources */,
 				497541CB214A88A7006CC7C0 /* GridCollectionViewCell.swift in Sources */,
-				497541BD214A8889006CC7C0 /* DynamicHeightCollectionViewLayout.swift in Sources */,
+				497541BD214A8889006CC7C0 /* NormalizedHeightCollectionViewLayout.swift in Sources */,
 				493699F6214B30A600DBBFAC /* Resources.swift in Sources */,
 				497541D1214A88A7006CC7C0 /* ListCollectionViewCell.swift in Sources */,
 				497541C9214A88A7006CC7C0 /* Array+Extension.swift in Sources */,
@@ -354,15 +354,15 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
-				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = GZA5R9P42G;
-				INFOPLIST_FILE = DynamicHeightCollectionViewLayout/Info.plist;
+				CODE_SIGN_STYLE = Manual;
+				DEVELOPMENT_TEAM = "";
+				INFOPLIST_FILE = NormalizedHeightCollectionViewLayout/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "Andrew-Tantomo.DynamicHeightCollectionViewLayout";
+				PRODUCT_BUNDLE_IDENTIFIER = "Andrew-Tantomo.NormalizedHeightCollectionViewLayout";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_VERSION = 4.0;
@@ -375,15 +375,15 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
-				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = GZA5R9P42G;
-				INFOPLIST_FILE = DynamicHeightCollectionViewLayout/Info.plist;
+				CODE_SIGN_STYLE = Manual;
+				DEVELOPMENT_TEAM = "";
+				INFOPLIST_FILE = NormalizedHeightCollectionViewLayout/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "Andrew-Tantomo.DynamicHeightCollectionViewLayout";
+				PRODUCT_BUNDLE_IDENTIFIER = "Andrew-Tantomo.NormalizedHeightCollectionViewLayout";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_VERSION = 4.0;
@@ -394,7 +394,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		497541A2214A885A006CC7C0 /* Build configuration list for PBXProject "DynamicHeightCollectionViewLayout" */ = {
+		497541A2214A885A006CC7C0 /* Build configuration list for PBXProject "NormalizedHeightCollectionViewLayout" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				497541B7214A885C006CC7C0 /* Debug */,
@@ -403,7 +403,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		497541B9214A885C006CC7C0 /* Build configuration list for PBXNativeTarget "DynamicHeightCollectionViewLayout" */ = {
+		497541B9214A885C006CC7C0 /* Build configuration list for PBXNativeTarget "NormalizedHeightCollectionViewLayout" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				497541BA214A885C006CC7C0 /* Debug */,

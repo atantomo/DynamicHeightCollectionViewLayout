@@ -1,6 +1,6 @@
 //
-//  DynamicHeightCollectionViewLayout.swift
-//  DynamicHeightCollectionViewLayout
+//  NormalizedHeightCollectionViewLayout.swift
+//  NormalizedHeightCollectionViewLayout
 //
 //  Created by Andrew Tantomo on 2018/09/11.
 //  Copyright © 2018 Andrew Tantomo. All rights reserved.
@@ -8,7 +8,7 @@
 
 import UIKit
 
-class DynamicHeightCollectionViewLayout: UICollectionViewLayout {
+class NormalizedHeightCollectionViewLayout: UICollectionViewLayout {
 
     typealias CellIndexRange = (minColumnIndex: Int, maxColumnIndex: Int, minRowIndex: Int, maxRowIndex: Int)
 
