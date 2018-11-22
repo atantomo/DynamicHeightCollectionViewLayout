@@ -91,21 +91,30 @@ class DynamicHeightCollectionViewController: UIViewController {
         }
         isReadyForTransition = false
 
-        var image = Resources.Image.list
-        var nextIdentifier = gridCellIdentifier
-        var nextLayout: UICollectionViewLayout = gridLayout
+        let image: UIImage
+        let nextIdentifier: String
+        let currentLayout: DynamicHeightCollectionViewLayout
+        let nextLayout: DynamicHeightCollectionViewLayout
 
         let isCurrentlyDisplayingGrid = (collectionView.collectionViewLayout == gridLayout)
         if isCurrentlyDisplayingGrid {
             image = Resources.Image.grid
             nextIdentifier = listCellIdentifier
+            currentLayout = gridLayout
             nextLayout = listLayout
+        } else {
+            image = Resources.Image.list
+            nextIdentifier = gridCellIdentifier
+            currentLayout = listLayout
+            nextLayout = gridLayout
         }
 
         toggleButton.setImage(image, for: UIControlState.normal)
         identifier = nextIdentifier
-        UIView.performWithoutAnimation {
-            self.collectionView.reloadSections(IndexSet(integer: 0))
+        UIView.performWithoutAnimation { [weak self] in
+            currentLayout.decorationAlpha = 0
+            nextLayout.decorationAlpha = 1
+            self?.collectionView.reloadSections(IndexSet(integer: 0))
         }
         collectionView.setCollectionViewLayout(nextLayout, animated: true) { [weak self] _ in
             self?.isReadyForTransition = true

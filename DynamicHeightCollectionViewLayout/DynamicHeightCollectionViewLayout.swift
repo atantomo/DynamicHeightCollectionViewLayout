@@ -17,6 +17,7 @@ class DynamicHeightCollectionViewLayout: UICollectionViewLayout {
     var landscapeColumnCount: Int = 4
     var verticalSeparatorWidth: CGFloat = 1
     var horizontalSeparatorHeight: CGFloat = 1
+    var decorationAlpha: CGFloat = 1
 
     var models: ChangeTracerArray<HeightCalculableDataSource> = ChangeTracerArray<HeightCalculableDataSource>() {
         didSet {
@@ -32,6 +33,7 @@ class DynamicHeightCollectionViewLayout: UICollectionViewLayout {
     private var cellWidth: CGFloat = 0
     private var cellHeights: [CGFloat] = [CGFloat]()
     private var rowHeights: [CGFloat] = [CGFloat]()
+    private var previousOffsetRatio: CGFloat?
     private var needsCompleteCalculation: Bool = true
 
     private var cellCount: Int {
@@ -137,6 +139,7 @@ class DynamicHeightCollectionViewLayout: UICollectionViewLayout {
     override func layoutAttributesForDecorationView(ofKind elementKind: String, at indexPath: IndexPath) -> UICollectionViewLayoutAttributes? {
         let attributes = UICollectionViewLayoutAttributes(forDecorationViewOfKind: elementKind, with: indexPath)
         attributes.zIndex = separatorZIndex
+        attributes.alpha = decorationAlpha
 
         switch elementKind {
         case verticalSeparatorIdentifier:
@@ -165,6 +168,31 @@ class DynamicHeightCollectionViewLayout: UICollectionViewLayout {
         let isCellWidthChanged = (newCellWidth != oldCellWidth)
         if isCellWidthChanged {
             needsCompleteCalculation = true
+        }
+        guard let collectionView = collectionView else {
+            return
+        }
+        let topInset = collectionView.contentInset.top
+        let topOffset = collectionView.contentOffset.y + topInset
+        previousOffsetRatio = topOffset / oldLayout.collectionViewContentSize.height
+    }
+
+    override func targetContentOffset(forProposedContentOffset proposedContentOffset: CGPoint) -> CGPoint {
+        guard let collectionView = collectionView,
+            let offsetRatio = previousOffsetRatio else {
+                return proposedContentOffset
+        }
+        previousOffsetRatio = nil
+        let topInset = collectionView.contentInset.top
+        let topOffset = (offsetRatio * collectionViewContentSize.height) - topInset
+
+        let forecastedContentHeight = topOffset + collectionView.bounds.height
+        if forecastedContentHeight > collectionViewContentSize.height {
+            let maxTopOffet = collectionViewContentSize.height - collectionView.bounds.height
+            return CGPoint(x: proposedContentOffset.x, y: maxTopOffet)
+
+        } else {
+            return CGPoint(x: proposedContentOffset.x, y: topOffset)
         }
     }
 
