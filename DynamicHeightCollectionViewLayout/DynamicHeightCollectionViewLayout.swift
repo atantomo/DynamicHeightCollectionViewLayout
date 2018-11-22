@@ -98,6 +98,34 @@ class DynamicHeightCollectionViewLayout: UICollectionViewLayout {
         }
     }
 
+    override func prepare(forCollectionViewUpdates updateItems: [UICollectionViewUpdateItem]) {
+        super.prepare(forCollectionViewUpdates: updateItems)
+        for updateItem in updateItems {
+            if updateItem.updateAction == .reload {
+                separatorAlpha = 0
+                invalidateLayout()
+            }
+        }
+    }
+
+    override func prepareForTransition(from oldLayout: UICollectionViewLayout) {
+        super.prepareForTransition(from: oldLayout)
+        separatorAlpha = 1
+
+        let oldCellWidth = cellWidth
+        let newCellWidth = calculateCellWidth()
+        let isCellWidthChanged = (newCellWidth != oldCellWidth)
+        if isCellWidthChanged {
+            needsCompleteCalculation = true
+        }
+        guard let collectionView = collectionView else {
+            return
+        }
+        let topInset = collectionView.contentInset.top
+        let topOffset = collectionView.contentOffset.y + topInset
+        previousOffsetRatio = topOffset / oldLayout.collectionViewContentSize.height
+    }
+
     override func finalizeCollectionViewUpdates() {
         super.finalizeCollectionViewUpdates()
         invalidateLayout()
@@ -160,32 +188,6 @@ class DynamicHeightCollectionViewLayout: UICollectionViewLayout {
             needsCompleteCalculation = true
         }
         return isBoundsWidthChanged
-    }
-
-    override func prepare(forCollectionViewUpdates updateItems: [UICollectionViewUpdateItem]) {
-        for updateItem in updateItems {
-            if updateItem.updateAction == .reload {
-                separatorAlpha = 0
-                invalidateLayout()
-            }
-        }
-    }
-
-    override func prepareForTransition(from oldLayout: UICollectionViewLayout) {
-        separatorAlpha = 1
-
-        let oldCellWidth = cellWidth
-        let newCellWidth = calculateCellWidth()
-        let isCellWidthChanged = (newCellWidth != oldCellWidth)
-        if isCellWidthChanged {
-            needsCompleteCalculation = true
-        }
-        guard let collectionView = collectionView else {
-            return
-        }
-        let topInset = collectionView.contentInset.top
-        let topOffset = collectionView.contentOffset.y + topInset
-        previousOffsetRatio = topOffset / oldLayout.collectionViewContentSize.height
     }
 
     override func targetContentOffset(forProposedContentOffset proposedContentOffset: CGPoint) -> CGPoint {
