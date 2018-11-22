@@ -162,7 +162,18 @@ class DynamicHeightCollectionViewLayout: UICollectionViewLayout {
         return isBoundsWidthChanged
     }
 
+    override func prepare(forCollectionViewUpdates updateItems: [UICollectionViewUpdateItem]) {
+        for updateItem in updateItems {
+            if updateItem.updateAction == .reload {
+                decorationAlpha = 0
+                invalidateLayout()
+            }
+        }
+    }
+
     override func prepareForTransition(from oldLayout: UICollectionViewLayout) {
+        decorationAlpha = 1
+
         let oldCellWidth = cellWidth
         let newCellWidth = calculateCellWidth()
         let isCellWidthChanged = (newCellWidth != oldCellWidth)
