@@ -17,7 +17,6 @@ class DynamicHeightCollectionViewLayout: UICollectionViewLayout {
     var landscapeColumnCount: Int = 4
     var verticalSeparatorWidth: CGFloat = 1
     var horizontalSeparatorHeight: CGFloat = 1
-    var decorationAlpha: CGFloat = 1
 
     var models: ChangeTracerArray<HeightCalculableDataSource> = ChangeTracerArray<HeightCalculableDataSource>() {
         didSet {
@@ -35,6 +34,7 @@ class DynamicHeightCollectionViewLayout: UICollectionViewLayout {
     private var rowHeights: [CGFloat] = [CGFloat]()
     private var previousOffsetRatio: CGFloat?
     private var needsCompleteCalculation: Bool = true
+    private var separatorAlpha: CGFloat = 1
 
     private var cellCount: Int {
         return cellHeights.count
@@ -139,7 +139,7 @@ class DynamicHeightCollectionViewLayout: UICollectionViewLayout {
     override func layoutAttributesForDecorationView(ofKind elementKind: String, at indexPath: IndexPath) -> UICollectionViewLayoutAttributes? {
         let attributes = UICollectionViewLayoutAttributes(forDecorationViewOfKind: elementKind, with: indexPath)
         attributes.zIndex = separatorZIndex
-        attributes.alpha = decorationAlpha
+        attributes.alpha = separatorAlpha
 
         switch elementKind {
         case verticalSeparatorIdentifier:
@@ -165,14 +165,14 @@ class DynamicHeightCollectionViewLayout: UICollectionViewLayout {
     override func prepare(forCollectionViewUpdates updateItems: [UICollectionViewUpdateItem]) {
         for updateItem in updateItems {
             if updateItem.updateAction == .reload {
-                decorationAlpha = 0
+                separatorAlpha = 0
                 invalidateLayout()
             }
         }
     }
 
     override func prepareForTransition(from oldLayout: UICollectionViewLayout) {
-        decorationAlpha = 1
+        separatorAlpha = 1
 
         let oldCellWidth = cellWidth
         let newCellWidth = calculateCellWidth()
