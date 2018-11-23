@@ -59,7 +59,7 @@ class GridCollectionViewCell: UICollectionViewCell {
 
 extension GridCollectionViewCell: HeightCalculable {
 
-    func heightForWidth<T>(width: CGFloat, model: T) -> CGFloat {
+    func heightForWidth(width: CGFloat, model: HeightCalculableDataSource) -> CGFloat {
         guard let model = model as? CellModel else {
             return 0.0
         }

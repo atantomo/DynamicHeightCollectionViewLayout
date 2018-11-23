@@ -9,5 +9,5 @@
 import UIKit
 
 protocol HeightCalculable {
-    func heightForWidth<T>(width: CGFloat, model: T) -> CGFloat
+    func heightForWidth(width: CGFloat, model: HeightCalculableDataSource) -> CGFloat
 }
