@@ -17,7 +17,7 @@ class NormalizedHeightCollectionViewController: UIViewController {
 
     @IBOutlet var toggleButtonWidthConstraint: NSLayoutConstraint!
 
-    private var models: ChangeTracerArray<HeightCalculableDataSource> = ChangeTracerArray() {
+    private var models: ChangeTracerArray<HeightCalculableDataSource> = [] {
         didSet {
             gridLayout.models = models
             listLayout.models = models

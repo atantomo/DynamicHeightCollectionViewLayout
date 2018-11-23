@@ -82,3 +82,11 @@ extension ChangeTracerArray: Collection {
     }
 
 }
+
+extension ChangeTracerArray: ExpressibleByArrayLiteral {
+
+    init(arrayLiteral elements: Element...) {
+        array = elements
+    }
+
+}

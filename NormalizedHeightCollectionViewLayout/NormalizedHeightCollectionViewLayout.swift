@@ -18,7 +18,7 @@ class NormalizedHeightCollectionViewLayout: UICollectionViewLayout {
     var verticalSeparatorWidth: CGFloat = 1
     var horizontalSeparatorHeight: CGFloat = 1
 
-    var models: ChangeTracerArray<HeightCalculableDataSource> = ChangeTracerArray<HeightCalculableDataSource>() {
+    var models: ChangeTracerArray<HeightCalculableDataSource> = [] {
         didSet {
             updateHeights()
         }
