@@ -1,4 +1,4 @@
-# DynamicHeightCollectionViewLayout
+# NormalizedHeightCollectionViewLayout
 
 Smooth scrolling solution to UICollectionView cells with varying height. When cells in a row have different heights, the height of the shorter cells will be adjusted to the height of the tallest cell.
 
