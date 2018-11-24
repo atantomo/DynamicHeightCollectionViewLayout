@@ -34,7 +34,6 @@ class NormalizedHeightCollectionViewLayout: UICollectionViewLayout {
     private var rowHeights: [CGFloat] = [CGFloat]()
     private var previousOffsetRatio: CGFloat?
     private var needsCompleteCalculation: Bool = true
-    private var separatorAlpha: CGFloat = 1
 
     private var cellCount: Int {
         return cellHeights.count
@@ -98,19 +97,8 @@ class NormalizedHeightCollectionViewLayout: UICollectionViewLayout {
         }
     }
 
-    override func prepare(forCollectionViewUpdates updateItems: [UICollectionViewUpdateItem]) {
-        super.prepare(forCollectionViewUpdates: updateItems)
-        for updateItem in updateItems {
-            if updateItem.updateAction == .reload {
-                separatorAlpha = 0
-                invalidateLayout()
-            }
-        }
-    }
-
     override func prepareForTransition(from oldLayout: UICollectionViewLayout) {
         super.prepareForTransition(from: oldLayout)
-        separatorAlpha = 1
 
         let oldCellWidth = cellWidth
         let newCellWidth = calculateCellWidth()
@@ -167,7 +155,6 @@ class NormalizedHeightCollectionViewLayout: UICollectionViewLayout {
     override func layoutAttributesForDecorationView(ofKind elementKind: String, at indexPath: IndexPath) -> UICollectionViewLayoutAttributes? {
         let attributes = UICollectionViewLayoutAttributes(forDecorationViewOfKind: elementKind, with: indexPath)
         attributes.zIndex = separatorZIndex
-        attributes.alpha = separatorAlpha
 
         switch elementKind {
         case verticalSeparatorIdentifier:
