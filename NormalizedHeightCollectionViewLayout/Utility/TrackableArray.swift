@@ -1,5 +1,5 @@
 //
-//  ChangeTracerArray.swift
+//  TrackableArray.swift
 //  NormalizedHeightCollectionViewLayout
 //
 //  Created by Andrew Tantomo on 2018/09/11.
@@ -8,13 +8,12 @@
 
 import Foundation
 
-struct ChangeTracerArray<T> {
+struct TrackableArray<T> {
 
     enum Change {
         case set
         case insert([Int])
         case delete([Int])
-        case update([Int])
     }
 
     private (set) var latestChange: Change = Change.set
@@ -53,14 +52,9 @@ struct ChangeTracerArray<T> {
         }
     }
 
-    mutating func update(at index: Int, element: T) {
-        latestChange = Change.update([index])
-        self.array[index] = element
-    }
-
 }
 
-extension ChangeTracerArray: Collection {
+extension TrackableArray: Collection {
 
     typealias Index = Int
     typealias Element = T
@@ -83,7 +77,7 @@ extension ChangeTracerArray: Collection {
 
 }
 
-extension ChangeTracerArray: ExpressibleByArrayLiteral {
+extension TrackableArray: ExpressibleByArrayLiteral {
 
     init(arrayLiteral elements: Element...) {
         array = elements

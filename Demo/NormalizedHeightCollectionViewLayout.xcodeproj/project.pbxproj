@@ -19,7 +19,7 @@
 		497541C9214A88A7006CC7C0 /* Array+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 497541BF214A88A5006CC7C0 /* Array+Extension.swift */; };
 		497541CA214A88A7006CC7C0 /* TextHeightCalculator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 497541C0214A88A5006CC7C0 /* TextHeightCalculator.swift */; };
 		497541CB214A88A7006CC7C0 /* GridCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 497541C1214A88A5006CC7C0 /* GridCollectionViewCell.swift */; };
-		497541CC214A88A7006CC7C0 /* ChangeTracerArray.swift in Sources */ = {isa = PBXBuildFile; fileRef = 497541C2214A88A6006CC7C0 /* ChangeTracerArray.swift */; };
+		497541CC214A88A7006CC7C0 /* TrackableArray.swift in Sources */ = {isa = PBXBuildFile; fileRef = 497541C2214A88A6006CC7C0 /* TrackableArray.swift */; };
 		497541CD214A88A7006CC7C0 /* HeightCalculable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 497541C3214A88A6006CC7C0 /* HeightCalculable.swift */; };
 		497541CE214A88A7006CC7C0 /* GridCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 497541C4214A88A6006CC7C0 /* GridCollectionViewCell.xib */; };
 		497541CF214A88A7006CC7C0 /* PlainCollectionReusableView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 497541C5214A88A6006CC7C0 /* PlainCollectionReusableView.xib */; };
@@ -43,7 +43,7 @@
 		497541BF214A88A5006CC7C0 /* Array+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Array+Extension.swift"; sourceTree = "<group>"; };
 		497541C0214A88A5006CC7C0 /* TextHeightCalculator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TextHeightCalculator.swift; sourceTree = "<group>"; };
 		497541C1214A88A5006CC7C0 /* GridCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GridCollectionViewCell.swift; sourceTree = "<group>"; };
-		497541C2214A88A6006CC7C0 /* ChangeTracerArray.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChangeTracerArray.swift; sourceTree = "<group>"; };
+		497541C2214A88A6006CC7C0 /* TrackableArray.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TrackableArray.swift; sourceTree = "<group>"; };
 		497541C3214A88A6006CC7C0 /* HeightCalculable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HeightCalculable.swift; sourceTree = "<group>"; };
 		497541C4214A88A6006CC7C0 /* GridCollectionViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = GridCollectionViewCell.xib; sourceTree = "<group>"; };
 		497541C5214A88A6006CC7C0 /* PlainCollectionReusableView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PlainCollectionReusableView.xib; sourceTree = "<group>"; };
@@ -115,7 +115,7 @@
 			isa = PBXGroup;
 			children = (
 				497541C3214A88A6006CC7C0 /* HeightCalculable.swift */,
-				497541C2214A88A6006CC7C0 /* ChangeTracerArray.swift */,
+				497541C2214A88A6006CC7C0 /* TrackableArray.swift */,
 				497541C0214A88A5006CC7C0 /* TextHeightCalculator.swift */,
 				497541BF214A88A5006CC7C0 /* Array+Extension.swift */,
 			);
@@ -202,7 +202,7 @@
 				497541D3214A88B9006CC7C0 /* NormalizedHeightCollectionViewController.swift in Sources */,
 				497541CD214A88A7006CC7C0 /* HeightCalculable.swift in Sources */,
 				493699F8214B37B900DBBFAC /* SampleEntity.swift in Sources */,
-				497541CC214A88A7006CC7C0 /* ChangeTracerArray.swift in Sources */,
+				497541CC214A88A7006CC7C0 /* TrackableArray.swift in Sources */,
 				497541CA214A88A7006CC7C0 /* TextHeightCalculator.swift in Sources */,
 				497541CB214A88A7006CC7C0 /* GridCollectionViewCell.swift in Sources */,
 				497541BD214A8889006CC7C0 /* NormalizedHeightCollectionViewLayout.swift in Sources */,

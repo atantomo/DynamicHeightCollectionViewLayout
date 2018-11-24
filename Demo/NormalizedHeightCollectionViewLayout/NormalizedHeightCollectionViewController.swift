@@ -17,7 +17,7 @@ class NormalizedHeightCollectionViewController: UIViewController {
 
     @IBOutlet var toggleButtonWidthConstraint: NSLayoutConstraint!
 
-    private var models: ChangeTracerArray<HeightCalculableDataSource> = [] {
+    private var models: TrackableArray<HeightCalculableDataSource> = [] {
         didSet {
             gridLayout.models = models
             listLayout.models = models
@@ -70,19 +70,13 @@ class NormalizedHeightCollectionViewController: UIViewController {
     private var isReadyForTransition: Bool = true
 
     override func viewDidLoad() {
-        models = ChangeTracerArray(SampleEntity.models)
+        models = TrackableArray(SampleEntity.models)
 
         setupCollectionView()
         setupButtons()
         setupShadow()
 
         NotificationCenter.default.addObserver(self, selector: #selector(deleteCell(sender:)), name: Resources.NotificationName.deleteCell, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(updateCell(sender:)), name: Resources.NotificationName.updateCell, object: nil)
-    }
-
-    deinit {
-        NotificationCenter.default.removeObserver(self, name: Resources.NotificationName.deleteCell, object: nil)
-        NotificationCenter.default.removeObserver(self, name: Resources.NotificationName.updateCell, object: nil)
     }
 
     @IBAction func toggleLayoutButtonTapped(_ sender: UIButton) {
@@ -152,17 +146,6 @@ class NormalizedHeightCollectionViewController: UIViewController {
         }
         models.remove(at: [indexPath.item])
         collectionView.deleteItems(at: [indexPath])
-    }
-
-    @objc
-    func updateCell(sender: Notification) {
-        guard let button = sender.object as? UIButton,
-            let position = button.superview?.convert(button.center, to: collectionView),
-            let indexPath = collectionView.indexPathForItem(at: position) else {
-                return
-        }
-        models.update(at: indexPath.item, element: SampleEntity.updatedModel)
-        collectionView.reloadItems(at: [indexPath])
     }
 
     private func setupCollectionView() {

@@ -12,7 +12,7 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
-        <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="Fnc-VD-RN3" customClass="GridCollectionViewCell" customModule="DynamicHeightCollectionViewLayout" customModuleProvider="target">
+        <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="Fnc-VD-RN3" customClass="GridCollectionViewCell" customModule="NormalizedHeightCollectionViewLayout" customModuleProvider="target">
             <rect key="frame" x="0.0" y="0.0" width="155" height="459"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
             <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO">
@@ -123,23 +123,10 @@
                                     <constraint firstAttribute="bottom" relation="greaterThanOrEqual" secondItem="xuj-JJ-RJv" secondAttribute="bottom" constant="16" id="uQB-DK-12v"/>
                                 </constraints>
                             </view>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="qFB-wf-pXw">
-                                <rect key="frame" x="115" y="48" width="40" height="40"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="40" id="4rL-v1-RLV"/>
-                                    <constraint firstAttribute="width" constant="40" id="Yw2-IC-EEc"/>
-                                </constraints>
-                                <color key="tintColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <state key="normal" image="icon-list"/>
-                                <connections>
-                                    <action selector="updateButtonTapped:" destination="Fnc-VD-RN3" eventType="touchUpInside" id="JmF-SZ-VMl"/>
-                                </connections>
-                            </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
                             <constraint firstAttribute="trailing" secondItem="tlB-xq-Jx2" secondAttribute="trailing" id="0wR-N5-SvQ"/>
-                            <constraint firstAttribute="trailing" secondItem="qFB-wf-pXw" secondAttribute="trailing" id="4fU-cB-blR"/>
                             <constraint firstItem="w4T-Xd-wbi" firstAttribute="leading" secondItem="q0q-KC-dVn" secondAttribute="leading" id="9Vq-oQ-uZM"/>
                             <constraint firstItem="tlB-xq-Jx2" firstAttribute="top" secondItem="w4T-Xd-wbi" secondAttribute="bottom" id="BMN-bX-grp"/>
                             <constraint firstItem="tlB-xq-Jx2" firstAttribute="leading" secondItem="q0q-KC-dVn" secondAttribute="leading" id="CRR-4W-KwO"/>
@@ -148,7 +135,6 @@
                             <constraint firstItem="05Q-Xl-ic5" firstAttribute="top" secondItem="q0q-KC-dVn" secondAttribute="top" id="MSu-NO-vyO"/>
                             <constraint firstItem="ea0-JP-ymg" firstAttribute="leading" secondItem="q0q-KC-dVn" secondAttribute="leading" id="MTS-hk-gCm"/>
                             <constraint firstItem="w4T-Xd-wbi" firstAttribute="top" secondItem="q0q-KC-dVn" secondAttribute="top" id="VT7-IK-uyC"/>
-                            <constraint firstItem="qFB-wf-pXw" firstAttribute="top" secondItem="05Q-Xl-ic5" secondAttribute="bottom" constant="8" id="fEb-Ax-2z3"/>
                             <constraint firstAttribute="trailing" secondItem="w4T-Xd-wbi" secondAttribute="trailing" id="u4L-5G-KRs"/>
                             <constraint firstItem="ea0-JP-ymg" firstAttribute="top" secondItem="tlB-xq-Jx2" secondAttribute="bottom" id="urB-eU-U24"/>
                             <constraint firstAttribute="trailing" secondItem="05Q-Xl-ic5" secondAttribute="trailing" id="vbE-kQ-pHE"/>
@@ -172,7 +158,6 @@
                 <outlet property="leftLabel" destination="WEr-zE-sJk" id="CgS-n0-ckt"/>
                 <outlet property="rightLabel" destination="3zf-mo-Ix5" id="cP1-W3-eBZ"/>
                 <outlet property="topLabel" destination="KcH-Z4-ZRg" id="Q5K-FS-pGb"/>
-                <outlet property="updateButton" destination="qFB-wf-pXw" id="1Iz-rQ-408"/>
                 <outletCollection property="verticalConstraints" destination="YHn-gx-zRT" collectionClass="NSMutableArray" id="pRM-9j-s5z"/>
                 <outletCollection property="verticalConstraints" destination="6RK-I5-t5h" collectionClass="NSMutableArray" id="pbp-JU-1Ow"/>
                 <outletCollection property="topLabelSideConstraints" destination="ZFn-Mo-5cD" collectionClass="NSMutableArray" id="F2h-p9-8eb"/>
@@ -188,7 +173,6 @@
     </objects>
     <resources>
         <image name="icon-close" width="30" height="30"/>
-        <image name="icon-list" width="30" height="30"/>
         <image name="icon-star" width="30" height="30"/>
     </resources>
 </document>

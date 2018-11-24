@@ -52,17 +52,4 @@ struct SampleEntity {
         return models
     }()
 
-    static var updatedModel: CellModel {
-        let joinUpTo = { (length: Int) -> String in
-            return SampleEntity.explodedSampleText[0..<length].joined(separator: " ")
-        }
-
-        let randomCounts = SampleEntity.textCounts.randomElement()!
-        let topText = joinUpTo(randomCounts.0)
-        let leftText = joinUpTo(randomCounts.1)
-        let rightText = joinUpTo(randomCounts.2)
-        let model = CellModel(topText: topText, leftText: leftText, rightText: rightText)
-        return model
-    }
-
 }
