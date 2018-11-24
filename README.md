@@ -1,8 +1,8 @@
 # NormalizedHeightCollectionViewLayout
 
-Smooth scrolling solution to UICollectionView cells with varying height. When cells in a row have different heights, the height of the shorter cells will be adjusted to the height of the tallest cell.
+Smooth scrolling solution to UICollectionView cells with varying height. When cells in a row have different heights, the height of the shorter cells will be adjusted to the height of the tallest cell in the row.
 
-This approach uses manual mathematical calculations (without any call to `systemLayoutSizeFittingSize:`) to allow calculations from the background thread if necessary.
+This approach uses manual mathematical calculations (without any call to `systemLayoutSizeFittingSize:`) to maximize performance and allow calculations from the background thread if necessary.
 
 The use of auto layout outlet collection in the Interface Builder makes it possible to achieve this system -- there is no need to declare separate constants (or magic numbers) for margins and paddings, which greatly reduces maintenance cost. Calculated heights are cached wherever appropriate to minimize calculations.
 
@@ -22,15 +22,15 @@ Any Xcode that can compile Swift 4.1.
 
 ## Installation
 
-Drag the 'DynamicHeightCollectionViewLayout' folder into your project.
+Drag the 'NormalizedHeightCollectionViewLayout' folder into your project.
 
 ## Usage
 (Please see demo project under 'Demo' folder for more details)
 
-* Create an instance of `DynamicHeightCollectionViewLayout` and specify the type of cell that you want to use for measurement
+* Create an instance of `NormalizedHeightCollectionViewLayout` and specify the type of cell that you want to use for measurement
 ```
-lazy var gridLayout: DynamicHeightCollectionViewLayout<GridCollectionViewCell> = {
-    let layout = DynamicHeightCollectionViewLayout<GridCollectionViewCell>()
+lazy var gridLayout: NormalizedHeightCollectionViewLayout = {
+    let layout = NormalizedHeightCollectionViewLayout()
     layout.measurementCell = gridMeasurementCell // gridMeasurementCell is subclass of UICollectionViewCell initialized from nib
     ...
 ```
@@ -46,9 +46,9 @@ lazy var gridLayout: DynamicHeightCollectionViewLayout<GridCollectionViewCell> =
 }()
 ```
 
-* Assign a specific model to your `DynamicHeightCollectionViewLayout` instance, which will become the data source of the height calculation in the next point
+* Assign a specific model to your `NormalizedHeightCollectionViewLayout` instance, which will become the data source of the height calculation in the next point
 ```
-var models: ChangeTracerArray<T> = ChangeTracerArray() { // replace 'T' with your Type here
+var models: TrackableArray<T> = TrackableArray() { // replace 'T' with your Type here
         didSet {
             gridLayout.models = models
         }
@@ -61,5 +61,4 @@ var models: ChangeTracerArray<T> = ChangeTracerArray() { // replace 'T' with you
 ## Limitations
 
 The following limitations may be addressed in the future if necessary:
-* The layout class can only process one kind of cell
-* The cell models have to be stored in `ChangeTracerArray` instead of the standard `Collection` type
+* The layout class interface only accept one kind of cell
