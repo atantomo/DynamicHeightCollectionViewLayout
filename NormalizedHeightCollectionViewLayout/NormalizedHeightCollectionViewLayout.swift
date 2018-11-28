@@ -8,9 +8,7 @@
 
 import UIKit
 
-class NormalizedHeightCollectionViewLayout: UICollectionViewLayout {
-
-    typealias CellIndexRange = (minColumnIndex: Int, maxColumnIndex: Int, minRowIndex: Int, maxRowIndex: Int)
+class NormalizedHeightCollectionViewLayout: UICollectionViewFlowLayout {
 
     var measurementCell: HeightCalculable?
     var portraitColumnCount: Int = 2
@@ -121,23 +119,18 @@ class NormalizedHeightCollectionViewLayout: UICollectionViewLayout {
 
     override func layoutAttributesForElements(in rect: CGRect) -> [UICollectionViewLayoutAttributes]? {
         var layoutAttributes = [UICollectionViewLayoutAttributes]()
-        let range = calculateCellIndexRange(in: rect)
+        let (cellIndexPaths, verticalSeparatorIndexPaths, horizontalSeparatorIndexPaths) = calculateSeparatorAndCellIndexPaths(in: rect)
 
-        let cellIndexPaths = indexPathsOfCells(in: range)
         for cellIndexPath in cellIndexPaths {
             if let attributes = layoutAttributesForItem(at: cellIndexPath) {
                 layoutAttributes.append(attributes)
             }
         }
-
-        let verticalSeparatorIndexPaths = indexPathsOfVerticalSeparator(in: range)
         for verticalSeparatorIndexPath in verticalSeparatorIndexPaths {
             if let attributes = layoutAttributesForDecorationView(ofKind: verticalSeparatorIdentifier, at: verticalSeparatorIndexPath) {
                 layoutAttributes.append(attributes)
             }
         }
-
-        let horizontalSeparatorIndexPaths = indexPathsOfHorizontalSeparator(in: range)
         for horizontalSeparatorIndexPath in horizontalSeparatorIndexPaths {
             if let attributes = layoutAttributesForDecorationView(ofKind: horizontalSeparatorIdentifier, at: horizontalSeparatorIndexPath) {
                 layoutAttributes.append(attributes)
@@ -236,37 +229,94 @@ class NormalizedHeightCollectionViewLayout: UICollectionViewLayout {
         return rowHeights
     }
 
-    private func calculateCellIndexRange(in rect: CGRect) -> CellIndexRange {
-        let minColumnIndex = columnIndexFromXCoordinate(xPosition: rect.minX)
-        let maxColumnIndex = columnIndexFromXCoordinate(xPosition: rect.maxX)
+    private func calculateSeparatorAndCellIndexPaths(in rect: CGRect) -> ([IndexPath], [IndexPath], [IndexPath]) {
+        let extraOffset: CGFloat = 1
+        let rect = CGRect(x: rect.origin.x - extraOffset,
+                          y: rect.origin.y - extraOffset,
+                          width: rect.width + (extraOffset * 2),
+                          height: rect.height + (extraOffset * 2))
+        let rowCount = rowHeights.count
+        let separatorAndCellRowCount = rowCount * 2
+        let separatorAndCellColumnCount = columnCount * 2
 
-        let minRowIndex = rowIndexFromYCoordinate(yPosition: rect.minY)
-        let maxRowIndex = rowIndexFromYCoordinate(yPosition: rect.maxY)
+        var cellIndexes = [Int]()
+        var verticalSeparatorIndexes = [Int]()
+        var horizontalSeparatorIndexes = [Int]()
 
-        let range = (minColumnIndex: minColumnIndex, maxColumnIndex: maxColumnIndex, minRowIndex: minRowIndex, maxRowIndex: maxRowIndex)
-        return range
-    }
+        var cellRowIndex = 0
+        var cellColumnIndex = 0
+        var separatorRowIndex = 0
+        var separatorColumnIndex = 0
 
-    private func columnIndexFromXCoordinate(xPosition: CGFloat) -> Int {
-        let xPositionWithOffset = xPosition - 1
+        var minRowVerticalSeparatorOrBlankIndexes = [Int]()
+        var minRowHorizontalSeparatorOrCellIndexes = [Int]()
 
-        let columnIndex = Int(xPositionWithOffset / cellAndVerticalSeparatorWidth)
-        return columnIndex
-    }
+        var loopXPosition: CGFloat = -extraOffset
+        for columnIndex in 0..<separatorAndCellColumnCount {
+            let isSeparatorColumnIndex = (columnIndex % 2 == 0)
 
-    private func rowIndexFromYCoordinate(yPosition: CGFloat) -> Int {
-        guard !rowHeights.isEmpty else {
-            return 0
-        }
-        var yPositionMutable = yPosition
-        for (rowIndex, rowHeight) in rowHeights.enumerated() {
-            yPositionMutable -= (rowHeight + horizontalSeparatorHeight)
-            if yPositionMutable <= 0 {
-                return rowIndex
+            if isSeparatorColumnIndex {
+                loopXPosition += verticalSeparatorWidth
+                if rect.minX <= loopXPosition || rect.maxX <= loopXPosition {
+                    minRowVerticalSeparatorOrBlankIndexes.append(separatorColumnIndex)
+                }
+                separatorColumnIndex += 1
+            } else {
+                loopXPosition += cellWidth
+                if rect.minX <= loopXPosition || rect.maxX <= loopXPosition {
+                    minRowHorizontalSeparatorOrCellIndexes.append(cellColumnIndex)
+                }
+                cellColumnIndex += 1
+            }
+            if rect.maxX <= loopXPosition {
+                break
             }
         }
-        let lastRowIndex = rowHeights.count - 1
-        return lastRowIndex
+
+        var loopYPosition: CGFloat = -extraOffset
+        for rowIndex in 0..<separatorAndCellRowCount {
+            let isSeparatorRowIndex = (rowIndex % 2 == 0)
+            if isSeparatorRowIndex {
+                loopYPosition += horizontalSeparatorHeight
+                if rect.minY <= loopYPosition || rect.maxY <= loopYPosition {
+                    for i in minRowHorizontalSeparatorOrCellIndexes {
+                        let cellIndex = separatorRowIndex * columnCount + i
+                        if cellIndex < cellHeights.count {
+                            horizontalSeparatorIndexes.append(cellIndex)
+                        }
+                    }
+                }
+                separatorRowIndex += 1
+            } else {
+                loopYPosition += rowHeights[cellRowIndex]
+                if rect.minY <= loopYPosition || rect.maxY <= loopYPosition {
+                    for i in minRowVerticalSeparatorOrBlankIndexes {
+                        let cellIndex = cellRowIndex * columnCount + i
+                        if cellIndex < cellHeights.count {
+                            verticalSeparatorIndexes.append(cellIndex)
+                        }
+                    }
+                    for i in minRowHorizontalSeparatorOrCellIndexes {
+                        let cellIndex = cellRowIndex * columnCount + i
+                        if cellIndex < cellHeights.count {
+                            cellIndexes.append(cellIndex)
+                        }
+                    }
+                }
+                cellRowIndex += 1
+            }
+            if rect.maxY <= loopYPosition {
+                break
+            }
+        }
+
+        let mapToIndexPath = { (index: Int) -> IndexPath in
+            return IndexPath(row: index, section: 0)
+        }
+        let cellIndexPaths = cellIndexes.map(mapToIndexPath)
+        let verticalSeparatorIndexPaths = verticalSeparatorIndexes.map(mapToIndexPath)
+        let horizontalSeparatorIndexPaths = horizontalSeparatorIndexes.map(mapToIndexPath)
+        return (cellIndexPaths, verticalSeparatorIndexPaths, horizontalSeparatorIndexPaths)
     }
 
     private func handleModelChange() {
@@ -356,76 +406,6 @@ class NormalizedHeightCollectionViewLayout: UICollectionViewLayout {
         return maxCellHeight
     }
 
-    private func indexPathsOfCells(in range: CellIndexRange) -> [IndexPath] {
-        var firstColumnIndexes = [Int]()
-        for i in range.minRowIndex...range.maxRowIndex {
-            let firstColumnIndex = range.minColumnIndex + i * columnCount
-            firstColumnIndexes.append(firstColumnIndex)
-        }
-
-        var indexes = [Int]()
-        for i in 0...(range.maxColumnIndex - range.minColumnIndex) {
-            for firstColumnIndex in firstColumnIndexes {
-                let columnIndex = firstColumnIndex + i
-                if columnIndex < cellCount {
-                    indexes.append(columnIndex)
-                }
-            }
-        }
-        let indexPaths = indexes.map { index in
-            return IndexPath(row: index, section: 0)
-        }
-        return indexPaths
-    }
-
-    private func indexPathsOfVerticalSeparator(in range: CellIndexRange) -> [IndexPath] {
-        var firstColumnIndexes = [Int]()
-        for i in range.minRowIndex...range.maxRowIndex {
-            let firstColumnIndex = range.minColumnIndex + i * (columnCount - 1)
-            if firstColumnIndex < verticalSeparatorCount {
-                firstColumnIndexes.append(firstColumnIndex)
-            }
-        }
-
-        var indexes = [Int]()
-        if (range.maxColumnIndex - range.minColumnIndex - 1) >= 0 {
-            for i in 0...(range.maxColumnIndex - range.minColumnIndex - 1) {
-                for firstColumnIndex in firstColumnIndexes {
-                    let columnIndex = firstColumnIndex + i
-                    if columnIndex < cellCount {
-                        indexes.append(columnIndex)
-                    }
-                }
-            }
-        }
-        let indexPaths = indexes.map { index in
-            return IndexPath(row: index, section: 0)
-        }
-        return indexPaths
-    }
-
-    private func indexPathsOfHorizontalSeparator(in range: CellIndexRange) -> [IndexPath] {
-        var firstColumnIndexes = [Int]()
-        for i in range.minRowIndex...range.maxRowIndex {
-            let firstColumnIndex = range.minColumnIndex + i * columnCount
-            firstColumnIndexes.append(firstColumnIndex)
-        }
-
-        var indexes = [Int]()
-        for i in 0...(range.maxColumnIndex - range.minColumnIndex) {
-            for firstColumnIndex in firstColumnIndexes {
-                let columnIndex = firstColumnIndex + i
-                if columnIndex < cellCount - columnCount {
-                    indexes.append(columnIndex)
-                }
-            }
-        }
-        let indexPaths = indexes.map { index in
-            return IndexPath(row: index, section: 0)
-        }
-        return indexPaths
-    }
-
     private func frameForCell(at indexPath: IndexPath) -> CGRect {
         let index = indexPath.row
 
@@ -433,6 +413,9 @@ class NormalizedHeightCollectionViewLayout: UICollectionViewLayout {
         let x = columnIndexCGFloat * cellAndVerticalSeparatorWidth
 
         let rowIndex = index / columnCount
+        if rowIndex >= rowHeights.count {
+            return CGRect.zero
+        }
         let y = horizontalSeparatorHeight * CGFloat(rowIndex) + rowHeights[0..<rowIndex].reduce(0) { lhs, rhs in
             return lhs + rhs
         }
@@ -443,44 +426,23 @@ class NormalizedHeightCollectionViewLayout: UICollectionViewLayout {
     }
 
     private func frameForVerticalSeparator(at indexPath: IndexPath) -> CGRect {
-        let index = indexPath.row
-
-        let columnIndexCGFloat = CGFloat(index).truncatingRemainder(dividingBy: CGFloat(columnCount - 1))
-        let interimCountOffset = columnIndexCGFloat + 1
-        let x = interimCountOffset * cellAndVerticalSeparatorWidth - verticalSeparatorWidth
-
-        let rowIndex = index / (columnCount - 1)
-        if rowIndex >= rowHeights.count {
-            return CGRect.zero
+        let cellFrame = frameForCell(at: indexPath)
+        var xOrigin = cellFrame.origin.x - verticalSeparatorWidth
+        if xOrigin < 0 {
+            xOrigin = cellFrame.origin.x
         }
-        let y = horizontalSeparatorHeight * CGFloat(rowIndex) + rowHeights[0..<rowIndex].reduce(0) { lhs, rhs in
-            return lhs + rhs
-        }
-        var separatorHeight: CGFloat = 0
-        if index < verticalSeparatorCount {
-            separatorHeight = rowHeights[rowIndex]
-        }
-
-        let frame = CGRect(x: x, y: y, width: verticalSeparatorWidth, height: separatorHeight)
-        return frame
+        let verticalSeparatorFrame = CGRect(x: xOrigin, y: cellFrame.origin.y, width: verticalSeparatorWidth, height: cellFrame.height)
+        return verticalSeparatorFrame
     }
 
     private func frameForHorizontalSeparator(at indexPath: IndexPath) -> CGRect {
-        let index = indexPath.row
-
-        let columnIndexCGFloat = CGFloat(index).truncatingRemainder(dividingBy: CGFloat(columnCount))
-        let x = columnIndexCGFloat * cellAndVerticalSeparatorWidth
-
-        let rowIndex = index / columnCount
-        if rowIndex >= rowHeights.count {
-            return CGRect.zero
+        let cellFrame = frameForCell(at: indexPath)
+        var yOrigin = cellFrame.origin.y - horizontalSeparatorHeight
+        if yOrigin < 0 {
+            yOrigin = cellFrame.origin.y
         }
-        let y = horizontalSeparatorHeight * CGFloat(rowIndex) + rowHeights[0...rowIndex].reduce(0) { lhs, rhs in
-            return lhs + rhs
-        }
-
-        let frame = CGRect(x: x, y: y, width: cellWidth, height: horizontalSeparatorHeight)
-        return frame
+        let horizontalSeparatorFrame = CGRect(x: cellFrame.origin.x, y: yOrigin, width: cellWidth, height: horizontalSeparatorHeight)
+        return horizontalSeparatorFrame
     }
 
 }
