@@ -23,6 +23,7 @@ struct Resources {
     struct NotificationName {
         static let deleteCell: NSNotification.Name = NSNotification.Name(rawValue: "deleteCell")
         static let updateCell: NSNotification.Name = NSNotification.Name(rawValue: "updateCell")
+        static let animateDecoration: NSNotification.Name = NSNotification.Name(rawValue: "animateDecoration")
     }
 
 }

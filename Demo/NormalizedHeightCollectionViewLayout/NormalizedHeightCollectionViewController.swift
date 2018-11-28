@@ -108,6 +108,7 @@ class NormalizedHeightCollectionViewController: UIViewController {
         collectionView.setCollectionViewLayout(nextLayout, animated: true) { [weak self] _ in
             self?.isReadyForTransition = true
             self?.syncDeleteButton()
+            NotificationCenter.default.post(name: Resources.NotificationName.animateDecoration, object: nil)
         }
     }
 
