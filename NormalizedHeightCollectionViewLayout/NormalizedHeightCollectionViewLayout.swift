@@ -14,7 +14,7 @@ class NormalizedHeightCollectionViewLayout: UICollectionViewFlowLayout {
     var portraitColumnCount: Int = 2
     var landscapeColumnCount: Int = 4
     var verticalSeparatorWidth: CGFloat = 1
-    var horizontalSeparatorHeight: CGFloat = 1
+    var horizontalSeparatorHeight: CGFloat = -1
 
     var models: TrackableArray<HeightCalculableDataSource> = [] {
         didSet {
@@ -437,11 +437,11 @@ class NormalizedHeightCollectionViewLayout: UICollectionViewFlowLayout {
 
     private func frameForHorizontalSeparator(at indexPath: IndexPath) -> CGRect {
         let cellFrame = frameForCell(at: indexPath)
-        var yOrigin = cellFrame.origin.y - horizontalSeparatorHeight
+        var yOrigin = cellFrame.origin.y// - 1//- horizontalSeparatorHeight
         if yOrigin < 0 {
             yOrigin = cellFrame.origin.y
         }
-        let horizontalSeparatorFrame = CGRect(x: cellFrame.origin.x, y: yOrigin, width: cellWidth, height: horizontalSeparatorHeight)
+        let horizontalSeparatorFrame = CGRect(x: cellFrame.origin.x, y: yOrigin, width: cellWidth, height: 1)
         return horizontalSeparatorFrame
     }
 

@@ -10,6 +10,7 @@ import UIKit
 
 class ListCollectionViewCell: UICollectionViewCell {
 
+    @IBOutlet var backgroundOverlay: UIView!
     @IBOutlet var container: UIView!
     @IBOutlet var imageView: UIImageView!
     @IBOutlet var topLabel: UILabel!
@@ -36,9 +37,11 @@ class ListCollectionViewCell: UICollectionViewCell {
     override var isHighlighted: Bool {
         didSet {
             if isHighlighted {
-                container.backgroundColor = Resources.Color.highlightedCellBackground
+                container.backgroundColor = UIColor.green
+                backgroundOverlay.backgroundColor = UIColor.green
             } else {
                 container.backgroundColor = Resources.Color.normalCellBackground
+                backgroundOverlay.backgroundColor = UIColor.clear
             }
         }
     }
@@ -47,8 +50,10 @@ class ListCollectionViewCell: UICollectionViewCell {
         didSet {
             if isSelected {
                 container.backgroundColor = Resources.Color.highlightedCellBackground
+                backgroundOverlay.backgroundColor = Resources.Color.highlightedCellBackground
             } else {
                 container.backgroundColor = Resources.Color.normalCellBackground
+                backgroundOverlay.backgroundColor = UIColor.clear
             }
         }
     }
@@ -79,7 +84,7 @@ extension ListCollectionViewCell: HeightCalculable {
         let rightSum = labelHeight + bottomLabelHeight + labelsVerticalPadding
 
         let sum = max(leftSum, rightSum)
-        return sum
+        return sum + 2
     }
 
 }
