@@ -11,10 +11,10 @@ import UIKit
 class NormalizedHeightCollectionViewLayout: UICollectionViewFlowLayout {
 
     var measurementCell: HeightCalculable?
-    var portraitColumnCount: Int = 2
-    var landscapeColumnCount: Int = 4
-    var verticalSeparatorWidth: CGFloat = 1
-    var horizontalSeparatorHeight: CGFloat = -1
+    var portraitColumnCount: Int = 1
+    var landscapeColumnCount: Int = 1
+    var verticalSeparatorWidth: CGFloat = 0
+    var horizontalSeparatorHeight: CGFloat = 0
     var footerHeight: CGFloat = 44.0
 
     // TODO: [COLLECTION_LAYOUT_EXPANSION] Refactor to make conditionals easier to maintain
