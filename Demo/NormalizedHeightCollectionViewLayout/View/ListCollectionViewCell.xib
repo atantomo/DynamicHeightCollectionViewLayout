@@ -183,7 +183,7 @@
                 <outletCollection property="imageVerticalConstraints" destination="8LT-AS-IeO" collectionClass="NSMutableArray" id="fCM-dk-LJP"/>
                 <outletCollection property="imageSideConstraints" destination="9Vq-oQ-uZM" collectionClass="NSMutableArray" id="vHk-ro-CiK"/>
             </connections>
-            <point key="canvasLocation" x="-40.5" y="58"/>
+            <point key="canvasLocation" x="0.0" y="0.0"/>
         </collectionViewCell>
     </objects>
     <resources>

@@ -15,16 +15,16 @@ class NormalizedHeightCollectionViewLayout: UICollectionViewFlowLayout {
     var landscapeColumnCount: Int = 4
     var verticalSeparatorWidth: CGFloat = 1
     var horizontalSeparatorHeight: CGFloat = -1
+    var footerHeight: CGFloat = 44.0
 
-    var models: TrackableArray<HeightCalculableDataSource> = [] {
-        didSet {
-            handleModelChange()
-        }
-    }
+    // TODO: [COLLECTION_LAYOUT_EXPANSION] Refactor to make conditionals easier to maintain
+    var prefersHorizontallyAttachedCells: Bool = false
+    var prefersVerticallyOverlappingCells: Bool = false
 
-    private let verticalSeparatorIdentifier: String = "verticalSeparator"
-    private let horizontalSeparatorIdentifier: String = "horizontalSeparator"
-    private let separatorZIndex: Int = -10
+    var verticalSeparatorIdentifier: String = "verticalSeparator"
+    var horizontalSeparatorIdentifier: String = "horizontalSeparator"
+
+    var models: TrackableArray<HeightCalculableDataSource> = []
 
     private var columnCount: Int = 0
     private var cellWidth: CGFloat = 0
@@ -33,33 +33,12 @@ class NormalizedHeightCollectionViewLayout: UICollectionViewFlowLayout {
     private var previousOffsetRatio: CGFloat?
     private var needsCompleteCalculation: Bool = true
 
-    private var cellCount: Int {
-        return cellHeights.count
-    }
-
-    private var verticalSeparatorCount: Int {
-        let fullRowSeparatorCount = cellCount / columnCount * (columnCount - 1)
-
-        let lastRowRemainderCellsCount = cellCount % columnCount
-        if lastRowRemainderCellsCount != 0 {
-            let lastRowSeparatorCount = lastRowRemainderCellsCount - 1
-            return fullRowSeparatorCount + lastRowSeparatorCount
+    private var separatorZIndex: Int {
+        if prefersHorizontallyAttachedCells {
+            return 10
         } else {
-            return fullRowSeparatorCount
+            return -10
         }
-    }
-
-    private var horizontalSeparatorCount: Int {
-        let excludingMultiLineLastRowCount = cellCount - columnCount
-        if excludingMultiLineLastRowCount < 0 {
-            return 0
-        } else {
-            return excludingMultiLineLastRowCount
-        }
-    }
-
-    private var cellAndVerticalSeparatorWidth: CGFloat {
-        return cellWidth + verticalSeparatorWidth
     }
 
     override init() {
@@ -76,10 +55,15 @@ class NormalizedHeightCollectionViewLayout: UICollectionViewFlowLayout {
 
     override var collectionViewContentSize: CGSize {
         let contentWidth = collectionView?.bounds.size.width ?? 0
-        let contentHeight = horizontalSeparatorHeight * CGFloat(rowHeights.count - 1) + rowHeights.reduce(0) { lhs, rhs in
+        let totalCellHeight = rowHeights.reduce(0) { lhs, rhs in
             return lhs + rhs
         }
-        let contentSize = CGSize(width: contentWidth, height: contentHeight);
+        let totalSeparatorHeight = horizontalSeparatorHeight * CGFloat(rowHeights.count - 1)
+        var contentHeight = totalCellHeight + totalSeparatorHeight + footerHeight
+        if prefersVerticallyOverlappingCells {
+            contentHeight = totalCellHeight - totalSeparatorHeight + footerHeight
+        }
+        let contentSize = CGSize(width: contentWidth, height: contentHeight)
         return contentSize
     }
 
@@ -119,10 +103,15 @@ class NormalizedHeightCollectionViewLayout: UICollectionViewFlowLayout {
 
     override func layoutAttributesForElements(in rect: CGRect) -> [UICollectionViewLayoutAttributes]? {
         var layoutAttributes = [UICollectionViewLayoutAttributes]()
-        let (cellIndexPaths, verticalSeparatorIndexPaths, horizontalSeparatorIndexPaths) = calculateSeparatorAndCellIndexPaths(in: rect)
+        let (cellIndexPaths, footerIndexPaths, verticalSeparatorIndexPaths, horizontalSeparatorIndexPaths) = calculateContentIndexPaths(in: rect)
 
         for cellIndexPath in cellIndexPaths {
             if let attributes = layoutAttributesForItem(at: cellIndexPath) {
+                layoutAttributes.append(attributes)
+            }
+        }
+        for footerIndexPath in footerIndexPaths {
+            if let attributes = layoutAttributesForSupplementaryView(ofKind: UICollectionElementKindSectionFooter, at: footerIndexPath) {
                 layoutAttributes.append(attributes)
             }
         }
@@ -142,6 +131,12 @@ class NormalizedHeightCollectionViewLayout: UICollectionViewFlowLayout {
     override func layoutAttributesForItem(at indexPath: IndexPath) -> UICollectionViewLayoutAttributes? {
         let attributes = UICollectionViewLayoutAttributes(forCellWith: indexPath)
         attributes.frame = frameForCell(at: indexPath)
+        return attributes
+    }
+
+    override func layoutAttributesForSupplementaryView(ofKind elementKind: String, at indexPath: IndexPath) -> UICollectionViewLayoutAttributes? {
+        let attributes = UICollectionViewLayoutAttributes(forSupplementaryViewOfKind: elementKind, with: indexPath)
+        attributes.frame = frameForFooter(at: indexPath)
         return attributes
     }
 
@@ -189,6 +184,49 @@ class NormalizedHeightCollectionViewLayout: UICollectionViewFlowLayout {
         }
     }
 
+    func reloadHeights()  {
+        needsCompleteCalculation = true
+    }
+
+    func insertHeights(at indexPaths: [IndexPath])  {
+        guard collectionView != nil else {
+            needsCompleteCalculation = true
+            return
+        }
+        // TODO: [COLLECTION_LAYOUT_EXPANSION] Support multiple sections if needed
+        let mapToIndex = { (indexPath: IndexPath) -> Int in
+            return indexPath.item
+        }
+        let indexes = indexPaths.map(mapToIndex)
+
+        for index in indexes {
+            let height = measurementCell?.heightForWidth(width: cellWidth, model: models[index]) ?? 0
+            cellHeights.insert(height, at: index)
+        }
+
+        let newMinCellIndex = indexes.min() ?? 0
+        reloadHeights(from: newMinCellIndex)
+    }
+
+    func removeHeights(at indexPaths: [IndexPath]) {
+        guard collectionView != nil else {
+            needsCompleteCalculation = true
+            return
+        }
+        // TODO: [COLLECTION_LAYOUT_EXPANSION] Support multiple sections if needed
+        let mapToIndex = { (indexPath: IndexPath) -> Int in
+            return indexPath.item
+        }
+        let indexes = indexPaths.map(mapToIndex)
+        let sortedReversedIndexes = Array(indexes.sorted().reversed())
+
+        for index in sortedReversedIndexes {
+            cellHeights.remove(at: index)
+        }
+        let newMinCellIndex = indexes.min() ?? 0
+        reloadHeights(from: newMinCellIndex)
+    }
+
     private func calculateColumnCount() -> Int {
         let width = collectionView?.bounds.size.width ?? 0
         let height = collectionView?.bounds.size.height ?? 0
@@ -203,7 +241,10 @@ class NormalizedHeightCollectionViewLayout: UICollectionViewFlowLayout {
         let totalWidth = collectionView?.bounds.size.width ?? 0.0
         let separatorCount = columnCount - 1
 
-        let contentWidth = totalWidth - verticalSeparatorWidth * CGFloat(separatorCount)
+        var contentWidth = totalWidth - verticalSeparatorWidth * CGFloat(separatorCount)
+        if prefersHorizontallyAttachedCells {
+            contentWidth = totalWidth
+        }
         let width = contentWidth / CGFloat(columnCount)
         return width
     }
@@ -218,7 +259,7 @@ class NormalizedHeightCollectionViewLayout: UICollectionViewFlowLayout {
 
     private func calculateRowHeights() -> [CGFloat] {
         var rowHeights = [CGFloat]()
-        for i in stride(from: 0, to: cellCount, by: columnCount) {
+        for i in stride(from: 0, to: cellHeights.count, by: columnCount) {
 
             let leftmostCellIndex = i
             let rightmostCellIndex = i + columnCount - 1
@@ -229,41 +270,51 @@ class NormalizedHeightCollectionViewLayout: UICollectionViewFlowLayout {
         return rowHeights
     }
 
-    private func calculateSeparatorAndCellIndexPaths(in rect: CGRect) -> ([IndexPath], [IndexPath], [IndexPath]) {
-        let extraOffset: CGFloat = 1
-        let rect = CGRect(x: rect.origin.x - extraOffset,
-                          y: rect.origin.y - extraOffset,
-                          width: rect.width + (extraOffset * 2),
-                          height: rect.height + (extraOffset * 2))
+    private func calculateContentIndexPaths(in rect: CGRect) -> (cellIndexPaths: [IndexPath], footerIndexPaths: [IndexPath], verticalSeparatorIndexPaths: [IndexPath], horizontalSeparatorIndexPaths: [IndexPath]) {
         let rowCount = rowHeights.count
-        let separatorAndCellRowCount = rowCount * 2
-        let separatorAndCellColumnCount = columnCount * 2
+        if rowCount == 0 {
+            return ([], [], [], [])
+        }
+
+        let cellColumnCount = columnCount
+        let separatorColumnCount = columnCount - 1
+        let cellRowCount = rowCount
+        let separatorRowCount = rowCount - 1
+        let footerCount = 1
+
+        let horizontalElementCount = cellColumnCount + separatorColumnCount
+        let verticalElementCount = cellRowCount + separatorRowCount + footerCount
 
         var cellIndexes = [Int]()
         var verticalSeparatorIndexes = [Int]()
         var horizontalSeparatorIndexes = [Int]()
+        var footerIndexes = [Int]()
 
         var cellRowIndex = 0
         var cellColumnIndex = 0
-        var separatorRowIndex = 0
-        var separatorColumnIndex = 0
+        var separatorRowIndex = 1 // intentionally skipping first index (because its frame is located outside of the collection view)
+        var separatorColumnIndex = 1 // intentionally skipping first index (because its frame is located outside of the collection view)
 
         var minRowVerticalSeparatorOrBlankIndexes = [Int]()
         var minRowHorizontalSeparatorOrCellIndexes = [Int]()
 
-        var loopXPosition: CGFloat = -extraOffset
-        for columnIndex in 0..<separatorAndCellColumnCount {
-            let isSeparatorColumnIndex = (columnIndex % 2 == 0)
+        var loopXPosition: CGFloat = 0
+        for columnIndex in 0..<horizontalElementCount {
+            let isSeparatorColumnIndex = (columnIndex % 2 != 0)
 
             if isSeparatorColumnIndex {
-                loopXPosition += verticalSeparatorWidth
-                if rect.minX <= loopXPosition || rect.maxX <= loopXPosition {
+                if prefersHorizontallyAttachedCells {
+                    loopXPosition += verticalSeparatorWidth / 2
+                } else {
+                    loopXPosition += verticalSeparatorWidth
+                }
+                if rect.minX <= loopXPosition {
                     minRowVerticalSeparatorOrBlankIndexes.append(separatorColumnIndex)
                 }
                 separatorColumnIndex += 1
             } else {
                 loopXPosition += cellWidth
-                if rect.minX <= loopXPosition || rect.maxX <= loopXPosition {
+                if rect.minX <= loopXPosition {
                     minRowHorizontalSeparatorOrCellIndexes.append(cellColumnIndex)
                 }
                 cellColumnIndex += 1
@@ -273,12 +324,24 @@ class NormalizedHeightCollectionViewLayout: UICollectionViewFlowLayout {
             }
         }
 
-        var loopYPosition: CGFloat = -extraOffset
-        for rowIndex in 0..<separatorAndCellRowCount {
-            let isSeparatorRowIndex = (rowIndex % 2 == 0)
+        var loopYPosition: CGFloat = 0
+        for rowIndex in 0..<verticalElementCount {
+            // TODO: [COLLECTION_LAYOUT_EXPANSION] Support multiple footers if needed
+            let lastIndex = verticalElementCount - 1
+            guard rowIndex != lastIndex else {
+                loopYPosition += footerHeight
+                if rect.minY <= loopYPosition {
+                    footerIndexes.append(0)
+                }
+                break
+            }
+
+            let isSeparatorRowIndex = (rowIndex % 2 != 0)
             if isSeparatorRowIndex {
-                loopYPosition += horizontalSeparatorHeight
-                if rect.minY <= loopYPosition || rect.maxY <= loopYPosition {
+                if !prefersVerticallyOverlappingCells {
+                    loopYPosition += horizontalSeparatorHeight
+                }
+                if rect.minY <= loopYPosition {
                     for i in minRowHorizontalSeparatorOrCellIndexes {
                         let cellIndex = separatorRowIndex * columnCount + i
                         if cellIndex < cellHeights.count {
@@ -289,7 +352,10 @@ class NormalizedHeightCollectionViewLayout: UICollectionViewFlowLayout {
                 separatorRowIndex += 1
             } else {
                 loopYPosition += rowHeights[cellRowIndex]
-                if rect.minY <= loopYPosition || rect.maxY <= loopYPosition {
+                if prefersVerticallyOverlappingCells {
+                    loopYPosition -= horizontalSeparatorHeight
+                }
+                if rect.minY <= loopYPosition {
                     for i in minRowVerticalSeparatorOrBlankIndexes {
                         let cellIndex = cellRowIndex * columnCount + i
                         if cellIndex < cellHeights.count {
@@ -314,74 +380,19 @@ class NormalizedHeightCollectionViewLayout: UICollectionViewFlowLayout {
             return IndexPath(row: index, section: 0)
         }
         let cellIndexPaths = cellIndexes.map(mapToIndexPath)
+        let footerIndexPaths = footerIndexes.map(mapToIndexPath)
         let verticalSeparatorIndexPaths = verticalSeparatorIndexes.map(mapToIndexPath)
         let horizontalSeparatorIndexPaths = horizontalSeparatorIndexes.map(mapToIndexPath)
-        return (cellIndexPaths, verticalSeparatorIndexPaths, horizontalSeparatorIndexPaths)
+        return (cellIndexPaths, footerIndexPaths, verticalSeparatorIndexPaths, horizontalSeparatorIndexPaths)
     }
 
-    private func handleModelChange() {
-        guard collectionView != nil else {
-            needsCompleteCalculation = true
-            return
-        }
-        switch models.latestChange {
-        case .insert(let indexes):
-            appendHeights(at: indexes)
-        case .delete(let indexes):
-            removeHeights(at: indexes)
-        case .set:
-            break
-        }
-    }
-
-    private func appendHeights(at indexes: [Int])  {
-        let newMinCellIndex = indexes.min() ?? 0
-        let newMaxCellIndex = indexes.max() ?? 0
-
-        for index in indexes {
-            let height = measurementCell?.heightForWidth(width: cellWidth, model: models[index]) ?? 0
-            cellHeights.insert(height, at: index)
-        }
-
-        let currentLastRowIndex = newMinCellIndex / columnCount
-        let currentLastRowRemainderCellsCount = newMinCellIndex % columnCount
-
-        var currentLastRowHeight: CGFloat = 0.0
-        if currentLastRowIndex < rowHeights.count {
-            currentLastRowHeight = rowHeights[currentLastRowIndex]
-        }
-
-        let newFirstRowLeftmostCellIndex = newMinCellIndex
-        let newFirstRowRightmostCelIndex = newMinCellIndex + (columnCount - 1) - currentLastRowRemainderCellsCount
-
-        let newFirstRowHeight = getMaxHeight(leftmostCellIndex: newFirstRowLeftmostCellIndex, tentativeRightmostCellIndex: newFirstRowRightmostCelIndex, cellHeights: cellHeights, extraComparisonHeight: currentLastRowHeight)
-
-        var newSecondRowOnwardHeights = [CGFloat]()
-        let newSecondRowLeftmostCellIndex = newFirstRowRightmostCelIndex + 1
-        for i in stride(from: newSecondRowLeftmostCellIndex, to: newMaxCellIndex + 1, by: columnCount) {
-
-            let leftmostCellIndex = i
-            let rightmostCellIndex = (columnCount - 1) + i
-
-            let height = getMaxHeight(leftmostCellIndex: leftmostCellIndex, tentativeRightmostCellIndex: rightmostCellIndex, cellHeights: cellHeights)
-            newSecondRowOnwardHeights.append(height)
-        }
-
-        let heights = Array(rowHeights[0..<currentLastRowIndex]) + [newFirstRowHeight] + newSecondRowOnwardHeights
-        rowHeights = heights
-    }
-
-    private func removeHeights(at indexes: [Int]) {
-        for index in indexes {
-            cellHeights.remove(at: index)
-        }
-
-        let newMinCellIndex = indexes.min() ?? 0
-        let deletionTopmostRowIndex = newMinCellIndex / columnCount
+    private func reloadHeights(from index: Int) {
+        let newMinCellIndex = index
+        let reloadTopmostRowIndex = newMinCellIndex / columnCount
 
         var recalculatedRowHeights = [CGFloat]()
-        let deletionTopmostLeftmostCellIndex = deletionTopmostRowIndex * columnCount
-        for i in stride(from: deletionTopmostLeftmostCellIndex, to: cellHeights.count, by: columnCount) {
+        let reloadTopmostLeftmostCellIndex = reloadTopmostRowIndex * columnCount
+        for i in stride(from: reloadTopmostLeftmostCellIndex, to: cellHeights.count, by: columnCount) {
 
             let leftmostCellIndex = i
             let rightmostCellIndex = (columnCount - 1) + i
@@ -389,7 +400,7 @@ class NormalizedHeightCollectionViewLayout: UICollectionViewFlowLayout {
             let height = getMaxHeight(leftmostCellIndex: leftmostCellIndex, tentativeRightmostCellIndex: rightmostCellIndex, cellHeights: cellHeights)
             recalculatedRowHeights.append(height)
         }
-        let heights = Array(rowHeights[0..<deletionTopmostRowIndex]) + recalculatedRowHeights
+        let heights = Array(rowHeights[0..<reloadTopmostRowIndex]) + recalculatedRowHeights
         rowHeights = heights
     }
 
@@ -410,14 +421,23 @@ class NormalizedHeightCollectionViewLayout: UICollectionViewFlowLayout {
         let index = indexPath.row
 
         let columnIndexCGFloat = CGFloat(index).truncatingRemainder(dividingBy: CGFloat(columnCount))
-        let x = columnIndexCGFloat * cellAndVerticalSeparatorWidth
+        let cellAndVerticalSeparatorWidth = cellWidth + verticalSeparatorWidth
+        var x = columnIndexCGFloat * cellAndVerticalSeparatorWidth
+        if prefersHorizontallyAttachedCells {
+            x = columnIndexCGFloat * cellWidth
+        }
 
         let rowIndex = index / columnCount
         if rowIndex >= rowHeights.count {
             return CGRect.zero
         }
-        let y = horizontalSeparatorHeight * CGFloat(rowIndex) + rowHeights[0..<rowIndex].reduce(0) { lhs, rhs in
+        let totalCellHeightBeforeThisIndex = rowHeights[0..<rowIndex].reduce(0) { lhs, rhs in
             return lhs + rhs
+        }
+        let totalSeparatorHeightBeforeThisIndex = horizontalSeparatorHeight * CGFloat(rowIndex)
+        var y = totalCellHeightBeforeThisIndex + totalSeparatorHeightBeforeThisIndex
+        if prefersVerticallyOverlappingCells {
+            y = totalCellHeightBeforeThisIndex - totalSeparatorHeightBeforeThisIndex - horizontalSeparatorHeight
         }
         let cellHeight = rowHeights[rowIndex]
 
@@ -425,23 +445,29 @@ class NormalizedHeightCollectionViewLayout: UICollectionViewFlowLayout {
         return frame
     }
 
+    private func frameForFooter(at indexPath: IndexPath) -> CGRect {
+        let totalSize = collectionViewContentSize
+        let footerFrame = CGRect(x: 0, y: totalSize.height - footerHeight, width: totalSize.width, height: footerHeight)
+        return footerFrame
+    }
+
     private func frameForVerticalSeparator(at indexPath: IndexPath) -> CGRect {
         let cellFrame = frameForCell(at: indexPath)
-        var xOrigin = cellFrame.origin.x - verticalSeparatorWidth
-        if xOrigin < 0 {
-            xOrigin = cellFrame.origin.x
+        var x = cellFrame.origin.x - verticalSeparatorWidth
+        if prefersHorizontallyAttachedCells {
+            x = cellFrame.origin.x - (verticalSeparatorWidth / 2)
         }
-        let verticalSeparatorFrame = CGRect(x: xOrigin, y: cellFrame.origin.y, width: verticalSeparatorWidth, height: cellFrame.height)
+        let verticalSeparatorFrame = CGRect(x: x, y: cellFrame.origin.y, width: verticalSeparatorWidth, height: cellFrame.height)
         return verticalSeparatorFrame
     }
 
     private func frameForHorizontalSeparator(at indexPath: IndexPath) -> CGRect {
         let cellFrame = frameForCell(at: indexPath)
-        var yOrigin = cellFrame.origin.y// - 1//- horizontalSeparatorHeight
-        if yOrigin < 0 {
-            yOrigin = cellFrame.origin.y
+        var y = cellFrame.origin.y - horizontalSeparatorHeight
+        if prefersVerticallyOverlappingCells {
+            y = cellFrame.origin.y
         }
-        let horizontalSeparatorFrame = CGRect(x: cellFrame.origin.x, y: yOrigin, width: cellWidth, height: 1)
+        let horizontalSeparatorFrame = CGRect(x: cellFrame.origin.x, y: y, width: cellWidth, height: horizontalSeparatorHeight)
         return horizontalSeparatorFrame
     }
 

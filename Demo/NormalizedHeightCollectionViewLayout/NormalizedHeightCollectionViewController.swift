@@ -21,6 +21,22 @@ class NormalizedHeightCollectionViewController: UIViewController {
         didSet {
             gridLayout.models = models
             listLayout.models = models
+            let mapToIndexPath = { (index: Int) -> IndexPath in
+                return IndexPath(item: index, section: 0)
+            }
+            switch models.latestChange {
+            case .set:
+                gridLayout.reloadHeights()
+                listLayout.reloadHeights()
+            case .insert(let indexes):
+                let indexPaths = indexes.map(mapToIndexPath)
+                gridLayout.insertHeights(at: indexPaths)
+                listLayout.insertHeights(at: indexPaths)
+            case .delete(let indexes):
+                let indexPaths = indexes.map(mapToIndexPath)
+                gridLayout.removeHeights(at: indexPaths)
+                listLayout.removeHeights(at: indexPaths)
+            }
         }
     }
 
@@ -41,6 +57,7 @@ class NormalizedHeightCollectionViewController: UIViewController {
         layout.landscapeColumnCount = 2
         layout.verticalSeparatorWidth = 1
         layout.horizontalSeparatorHeight = 1
+        layout.prefersVerticallyOverlappingCells = true
         return layout
     }()
 
@@ -66,6 +83,7 @@ class NormalizedHeightCollectionViewController: UIViewController {
 
     private let gridCellIdentifier: String = "gridCell"
     private let listCellIdentifier: String = "listCell"
+    private let emptyFooterIdentifier: String = "emptyFooter"
 
     private var isReadyForTransition: Bool = true
 
@@ -108,7 +126,6 @@ class NormalizedHeightCollectionViewController: UIViewController {
         collectionView.setCollectionViewLayout(nextLayout, animated: true) { [weak self] _ in
             self?.isReadyForTransition = true
             self?.syncDeleteButton()
-            NotificationCenter.default.post(name: Resources.NotificationName.animateDecoration, object: nil)
         }
     }
 
@@ -155,6 +172,7 @@ class NormalizedHeightCollectionViewController: UIViewController {
 
         collectionView.register(UINib(nibName: "GridCollectionViewCell", bundle: nil), forCellWithReuseIdentifier: gridCellIdentifier)
         collectionView.register(UINib(nibName: "ListCollectionViewCell", bundle: nil), forCellWithReuseIdentifier: listCellIdentifier)
+        collectionView.register(UINib(nibName: "EmptyCollectionReusableView", bundle: nil), forSupplementaryViewOfKind: UICollectionElementKindSectionFooter, withReuseIdentifier: emptyFooterIdentifier)
 
         collectionView.setCollectionViewLayout(gridLayout, animated: false)
         collectionView.dataSource = self
@@ -217,6 +235,14 @@ extension NormalizedHeightCollectionViewController: UICollectionViewDataSource {
         return dequeuedCell
     }
 
+    func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
+        if kind == UICollectionElementKindSectionFooter {
+            let supplementaryView = collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionElementKindSectionFooter, withReuseIdentifier: emptyFooterIdentifier, for: indexPath)
+            return supplementaryView
+        }
+        return UICollectionReusableView()
+    }
+    
 }
 
 extension NormalizedHeightCollectionViewController: UICollectionViewDelegate {

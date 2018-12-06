@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		2EFAC2A021B8E53800570EA1 /* EmptyCollectionReusableView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2EFAC29F21B8E53800570EA1 /* EmptyCollectionReusableView.xib */; };
+		2EFAC2A221B8E54400570EA1 /* EmptyCollectionReusableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EFAC2A121B8E54400570EA1 /* EmptyCollectionReusableView.swift */; };
 		493699F6214B30A600DBBFAC /* Resources.swift in Sources */ = {isa = PBXBuildFile; fileRef = 493699F5214B30A600DBBFAC /* Resources.swift */; };
 		493699F8214B37B900DBBFAC /* SampleEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 493699F7214B37B900DBBFAC /* SampleEntity.swift */; };
 		493699FA214B3C7500DBBFAC /* RoundedButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 493699F9214B3C7500DBBFAC /* RoundedButton.swift */; };
@@ -29,6 +31,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		2EFAC29F21B8E53800570EA1 /* EmptyCollectionReusableView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = EmptyCollectionReusableView.xib; sourceTree = "<group>"; };
+		2EFAC2A121B8E54400570EA1 /* EmptyCollectionReusableView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EmptyCollectionReusableView.swift; sourceTree = "<group>"; };
 		493699F5214B30A600DBBFAC /* Resources.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Resources.swift; sourceTree = "<group>"; };
 		493699F7214B37B900DBBFAC /* SampleEntity.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SampleEntity.swift; sourceTree = "<group>"; };
 		493699F9214B3C7500DBBFAC /* RoundedButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RoundedButton.swift; sourceTree = "<group>"; };
@@ -106,6 +110,8 @@
 				497541C4214A88A6006CC7C0 /* GridCollectionViewCell.xib */,
 				497541C6214A88A6006CC7C0 /* PlainCollectionReusableView.swift */,
 				497541C5214A88A6006CC7C0 /* PlainCollectionReusableView.xib */,
+				2EFAC2A121B8E54400570EA1 /* EmptyCollectionReusableView.swift */,
+				2EFAC29F21B8E53800570EA1 /* EmptyCollectionReusableView.xib */,
 				493699F9214B3C7500DBBFAC /* RoundedButton.swift */,
 			);
 			path = View;
@@ -182,6 +188,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				497541C8214A88A7006CC7C0 /* ListCollectionViewCell.xib in Resources */,
+				2EFAC2A021B8E53800570EA1 /* EmptyCollectionReusableView.xib in Resources */,
 				497541B5214A885C006CC7C0 /* LaunchScreen.storyboard in Resources */,
 				497541B2214A885C006CC7C0 /* Assets.xcassets in Resources */,
 				497541B0214A885A006CC7C0 /* Main.storyboard in Resources */,
@@ -204,6 +211,7 @@
 				493699F8214B37B900DBBFAC /* SampleEntity.swift in Sources */,
 				497541CC214A88A7006CC7C0 /* TrackableArray.swift in Sources */,
 				497541CA214A88A7006CC7C0 /* TextHeightCalculator.swift in Sources */,
+				2EFAC2A221B8E54400570EA1 /* EmptyCollectionReusableView.swift in Sources */,
 				497541CB214A88A7006CC7C0 /* GridCollectionViewCell.swift in Sources */,
 				497541BD214A8889006CC7C0 /* NormalizedHeightCollectionViewLayout.swift in Sources */,
 				493699F6214B30A600DBBFAC /* Resources.swift in Sources */,

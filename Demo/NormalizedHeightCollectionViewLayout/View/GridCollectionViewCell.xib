@@ -168,7 +168,7 @@
                 <outletCollection property="leftRightLabelsSideConstraints" destination="O5d-Ks-SiL" collectionClass="NSMutableArray" id="Trk-FB-ywo"/>
                 <outletCollection property="leftRightLabelsSideConstraints" destination="Ake-dN-PiL" collectionClass="NSMutableArray" id="Vpy-0d-1Uq"/>
             </connections>
-            <point key="canvasLocation" x="-132.5" y="134.5"/>
+            <point key="canvasLocation" x="0.0" y="0.0"/>
         </collectionViewCell>
     </objects>
     <resources>

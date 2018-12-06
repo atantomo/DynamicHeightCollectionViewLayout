@@ -1,5 +1,5 @@
 //
-//  PlainCollectionReusableView.swift
+//  EmptyCollectionReusableView.swift
 //  NormalizedHeightCollectionViewLayout
 //
 //  Created by Andrew Tantomo on 2018/08/14.
@@ -8,11 +8,7 @@
 
 import UIKit
 
-//class AnimatableLayoutAttributes: UICollectionViewLayoutAttributes {
-//    var animationHandler: ((UIView) -> Void)?
-//}
-
-class PlainCollectionReusableView: UICollectionReusableView {
+class EmptyCollectionReusableView: UICollectionReusableView {
 
     override func willTransition(from oldLayout: UICollectionViewLayout, to newLayout: UICollectionViewLayout) {
         super.willTransition(from: oldLayout, to: newLayout)

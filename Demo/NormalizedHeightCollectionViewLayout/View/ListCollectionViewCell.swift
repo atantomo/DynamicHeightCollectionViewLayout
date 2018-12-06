@@ -37,8 +37,8 @@ class ListCollectionViewCell: UICollectionViewCell {
     override var isHighlighted: Bool {
         didSet {
             if isHighlighted {
-                container.backgroundColor = UIColor.green
-                backgroundOverlay.backgroundColor = UIColor.green
+                container.backgroundColor = Resources.Color.highlightedCellBackground
+                backgroundOverlay.backgroundColor = Resources.Color.highlightedCellBackground
             } else {
                 container.backgroundColor = Resources.Color.normalCellBackground
                 backgroundOverlay.backgroundColor = UIColor.clear
