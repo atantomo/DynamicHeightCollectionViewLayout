@@ -29,9 +29,16 @@ class NormalizedHeightCollectionViewLayout: UICollectionViewFlowLayout {
     private var columnCount: Int = 0
     private var cellWidth: CGFloat = 0
     private var cellHeights: [CGFloat] = [CGFloat]()
-    private var rowHeights: [CGFloat] = [CGFloat]()
+    private var normalizedCellFrames: [CGRect] = [CGRect]()
+    private var totalRowHeight: CGFloat = 0
+    private var contentSize: CGSize = CGSize.zero
     private var previousOffsetRatio: CGFloat?
     private var needsCompleteCalculation: Bool = true
+
+    private var rowCount: Int {
+        let rowCount = ceil(CGFloat(cellHeights.count) / CGFloat(columnCount))
+        return Int(rowCount)
+    }
 
     private var separatorZIndex: Int {
         if prefersHorizontallyAttachedCells {
@@ -54,16 +61,6 @@ class NormalizedHeightCollectionViewLayout: UICollectionViewFlowLayout {
     }
 
     override var collectionViewContentSize: CGSize {
-        let contentWidth = collectionView?.bounds.size.width ?? 0
-        let totalCellHeight = rowHeights.reduce(0) { lhs, rhs in
-            return lhs + rhs
-        }
-        let totalSeparatorHeight = horizontalSeparatorHeight * CGFloat(rowHeights.count - 1)
-        var contentHeight = totalCellHeight + totalSeparatorHeight + footerHeight
-        if prefersVerticallyOverlappingCells {
-            contentHeight = totalCellHeight - totalSeparatorHeight + footerHeight
-        }
-        let contentSize = CGSize(width: contentWidth, height: contentHeight)
         return contentSize
     }
 
@@ -75,8 +72,26 @@ class NormalizedHeightCollectionViewLayout: UICollectionViewFlowLayout {
             columnCount = calculateColumnCount()
             cellWidth = calculateCellWidth()
             cellHeights = calculateCellHeights()
-            rowHeights = calculateRowHeights()
+            normalizedCellFrames = calculateNormalizedCellFrames()
+            contentSize = calculateContentSize()
         }
+    }
+
+    func calculateContentSize() -> CGSize {
+        let contentWidth = collectionView?.bounds.size.width ?? 0
+        var totalRowHeight: CGFloat = 0
+        for i in stride(from: 0, to: cellHeights.count, by: columnCount) {
+            let rowHeight = normalizedCellFrames[i].height
+            totalRowHeight += rowHeight
+        }
+
+        let totalSeparatorHeight = horizontalSeparatorHeight * CGFloat(rowCount - 1)
+        var contentHeight = totalRowHeight + totalSeparatorHeight + footerHeight
+        if prefersVerticallyOverlappingCells {
+            contentHeight = totalRowHeight - totalSeparatorHeight + footerHeight
+        }
+        let contentSize = CGSize(width: contentWidth, height: contentHeight)
+        return contentSize
     }
 
     override func prepareForTransition(from oldLayout: UICollectionViewLayout) {
@@ -206,6 +221,8 @@ class NormalizedHeightCollectionViewLayout: UICollectionViewFlowLayout {
 
         let newMinCellIndex = indexes.min() ?? 0
         reloadHeights(from: newMinCellIndex)
+
+        contentSize = calculateContentSize()
     }
 
     func removeHeights(at indexPaths: [IndexPath]) {
@@ -225,6 +242,8 @@ class NormalizedHeightCollectionViewLayout: UICollectionViewFlowLayout {
         }
         let newMinCellIndex = indexes.min() ?? 0
         reloadHeights(from: newMinCellIndex)
+
+        contentSize = calculateContentSize()
     }
 
     private func calculateColumnCount() -> Int {
@@ -257,21 +276,49 @@ class NormalizedHeightCollectionViewLayout: UICollectionViewFlowLayout {
         return cellHeights
     }
 
-    private func calculateRowHeights() -> [CGFloat] {
-        var rowHeights = [CGFloat]()
+    private func calculateNormalizedCellFrames() -> [CGRect] {
+//        var rowHeights = [CGFloat]()
+        var normalizedCellFrames = [CGRect]()
+        var loopHeight: CGFloat = 0
+
         for i in stride(from: 0, to: cellHeights.count, by: columnCount) {
 
             let leftmostCellIndex = i
             let rightmostCellIndex = i + columnCount - 1
 
             let height = getMaxHeight(leftmostCellIndex: leftmostCellIndex, tentativeRightmostCellIndex: rightmostCellIndex, cellHeights: cellHeights)
-            rowHeights.append(height)
+
+            for j in i..<(i + columnCount) {
+                if j >= cellHeights.count {
+                    break
+                }
+                let index = j
+
+                let columnIndexCGFloat = CGFloat(index).truncatingRemainder(dividingBy: CGFloat(columnCount))
+                let cellAndVerticalSeparatorWidth = cellWidth + verticalSeparatorWidth
+                var x = columnIndexCGFloat * cellAndVerticalSeparatorWidth
+                if prefersHorizontallyAttachedCells {
+                    x = columnIndexCGFloat * cellWidth
+                }
+
+                let rowIndex = index / columnCount
+                let totalCellHeightBeforeThisIndex = loopHeight
+                let totalSeparatorHeightBeforeThisIndex = horizontalSeparatorHeight * CGFloat(rowIndex)
+                var y = totalCellHeightBeforeThisIndex + totalSeparatorHeightBeforeThisIndex
+                if prefersVerticallyOverlappingCells {
+                    y = totalCellHeightBeforeThisIndex - totalSeparatorHeightBeforeThisIndex - horizontalSeparatorHeight
+                }
+                let cellHeight = height
+
+                let frame = CGRect(x: x, y: y, width: cellWidth, height: cellHeight)
+                normalizedCellFrames.append(frame)
+            }
+            loopHeight += height
         }
-        return rowHeights
+        return normalizedCellFrames
     }
 
     private func calculateContentIndexPaths(in rect: CGRect) -> (cellIndexPaths: [IndexPath], footerIndexPaths: [IndexPath], verticalSeparatorIndexPaths: [IndexPath], horizontalSeparatorIndexPaths: [IndexPath]) {
-        let rowCount = rowHeights.count
         if rowCount == 0 {
             return ([], [], [], [])
         }
@@ -351,7 +398,7 @@ class NormalizedHeightCollectionViewLayout: UICollectionViewFlowLayout {
                 }
                 separatorRowIndex += 1
             } else {
-                loopYPosition += rowHeights[cellRowIndex]
+                loopYPosition += normalizedCellFrames[cellRowIndex * columnCount].height
                 if prefersVerticallyOverlappingCells {
                     loopYPosition -= horizontalSeparatorHeight
                 }
@@ -389,8 +436,13 @@ class NormalizedHeightCollectionViewLayout: UICollectionViewFlowLayout {
     private func reloadHeights(from index: Int) {
         let newMinCellIndex = index
         let reloadTopmostRowIndex = newMinCellIndex / columnCount
+        let reloadTopmostCellIndex = reloadTopmostRowIndex * columnCount
 
-        var recalculatedRowHeights = [CGFloat]()
+
+//        var recalculatedRowHeights = [CGFloat]()
+        var reloadNormalizedCellFrames = [CGRect]()
+        var loopHeight: CGFloat = normalizedCellFrames[reloadTopmostCellIndex - 1].origin.y + normalizedCellFrames[reloadTopmostCellIndex - 1].height
+
         let reloadTopmostLeftmostCellIndex = reloadTopmostRowIndex * columnCount
         for i in stride(from: reloadTopmostLeftmostCellIndex, to: cellHeights.count, by: columnCount) {
 
@@ -398,10 +450,37 @@ class NormalizedHeightCollectionViewLayout: UICollectionViewFlowLayout {
             let rightmostCellIndex = (columnCount - 1) + i
 
             let height = getMaxHeight(leftmostCellIndex: leftmostCellIndex, tentativeRightmostCellIndex: rightmostCellIndex, cellHeights: cellHeights)
-            recalculatedRowHeights.append(height)
+
+            for j in i..<(i + columnCount) {
+                print((j, i + columnCount))
+                if j >= cellHeights.count {
+                    break
+                }
+                let index = j
+
+                let columnIndexCGFloat = CGFloat(index).truncatingRemainder(dividingBy: CGFloat(columnCount))
+                let cellAndVerticalSeparatorWidth = cellWidth + verticalSeparatorWidth
+                var x = columnIndexCGFloat * cellAndVerticalSeparatorWidth
+                if prefersHorizontallyAttachedCells {
+                    x = columnIndexCGFloat * cellWidth
+                }
+
+                let rowIndex = index / columnCount
+                let totalCellHeightBeforeThisIndex = loopHeight
+                let totalSeparatorHeightBeforeThisIndex = horizontalSeparatorHeight * CGFloat(rowIndex)
+                var y = totalCellHeightBeforeThisIndex + totalSeparatorHeightBeforeThisIndex
+                if prefersVerticallyOverlappingCells {
+                    y = totalCellHeightBeforeThisIndex - totalSeparatorHeightBeforeThisIndex - horizontalSeparatorHeight
+                }
+                let cellHeight = height
+
+                let frame = CGRect(x: x, y: y, width: cellWidth, height: cellHeight)
+                reloadNormalizedCellFrames.append(frame)
+            }
+            loopHeight += height
         }
-        let heights = Array(rowHeights[0..<reloadTopmostRowIndex]) + recalculatedRowHeights
-        rowHeights = heights
+        let frames = Array(normalizedCellFrames[0..<reloadTopmostCellIndex]) + reloadNormalizedCellFrames
+        normalizedCellFrames = frames
     }
 
     private func getMaxHeight(leftmostCellIndex: Int, tentativeRightmostCellIndex: Int, cellHeights: [CGFloat], extraComparisonHeight: CGFloat = 0.0) -> CGFloat {
@@ -418,31 +497,10 @@ class NormalizedHeightCollectionViewLayout: UICollectionViewFlowLayout {
     }
 
     private func frameForCell(at indexPath: IndexPath) -> CGRect {
-        let index = indexPath.row
-
-        let columnIndexCGFloat = CGFloat(index).truncatingRemainder(dividingBy: CGFloat(columnCount))
-        let cellAndVerticalSeparatorWidth = cellWidth + verticalSeparatorWidth
-        var x = columnIndexCGFloat * cellAndVerticalSeparatorWidth
-        if prefersHorizontallyAttachedCells {
-            x = columnIndexCGFloat * cellWidth
-        }
-
-        let rowIndex = index / columnCount
-        if rowIndex >= rowHeights.count {
+        if indexPath.item >= normalizedCellFrames.count {
             return CGRect.zero
         }
-        let totalCellHeightBeforeThisIndex = rowHeights[0..<rowIndex].reduce(0) { lhs, rhs in
-            return lhs + rhs
-        }
-        let totalSeparatorHeightBeforeThisIndex = horizontalSeparatorHeight * CGFloat(rowIndex)
-        var y = totalCellHeightBeforeThisIndex + totalSeparatorHeightBeforeThisIndex
-        if prefersVerticallyOverlappingCells {
-            y = totalCellHeightBeforeThisIndex - totalSeparatorHeightBeforeThisIndex - horizontalSeparatorHeight
-        }
-        let cellHeight = rowHeights[rowIndex]
-
-        let frame = CGRect(x: x, y: y, width: cellWidth, height: cellHeight)
-        return frame
+        return normalizedCellFrames[indexPath.item]
     }
 
     private func frameForFooter(at indexPath: IndexPath) -> CGRect {
