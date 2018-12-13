@@ -202,8 +202,7 @@ class NormalizedHeightCollectionViewLayout: UICollectionViewFlowLayout {
         }
 
         let newMinCellIndex = indexes.min() ?? 0
-        reloadHeights(from: newMinCellIndex)
-
+        normalizedCellFrames = calculateNormalizedCellFrames(from: newMinCellIndex)
         contentSize = calculateContentSize()
     }
 
@@ -223,8 +222,7 @@ class NormalizedHeightCollectionViewLayout: UICollectionViewFlowLayout {
             cellHeights.remove(at: index)
         }
         let newMinCellIndex = indexes.min() ?? 0
-        reloadHeights(from: newMinCellIndex)
-
+        normalizedCellFrames = calculateNormalizedCellFrames(from: newMinCellIndex)
         contentSize = calculateContentSize()
     }
 
@@ -259,7 +257,7 @@ class NormalizedHeightCollectionViewLayout: UICollectionViewFlowLayout {
     }
 
     private func calculateNormalizedCellFrames() -> [CGRect] {
-        let frames = calculateNormalizedCellFrames(from: 0, to: cellHeights.count)
+        let frames = calculateNormalizedCellFrames(from: 0)
         return frames
     }
 
@@ -395,11 +393,19 @@ class NormalizedHeightCollectionViewLayout: UICollectionViewFlowLayout {
         return (cellIndexPaths, footerIndexPaths, verticalSeparatorIndexPaths, horizontalSeparatorIndexPaths)
     }
 
-    private func calculateNormalizedCellFrames(from: Int, to: Int, startingYOrigin: CGFloat = 0) -> [CGRect] {
-        var frames = [CGRect]()
+    private func calculateNormalizedCellFrames(from cellIndex: Int) -> [CGRect] {
+        let reloadTopmostRowIndex = cellIndex / columnCount
+        let reloadTopmostLeftmostCellIndex = reloadTopmostRowIndex * columnCount
+
+        var startingYOrigin: CGFloat = 0
+        if normalizedCellFrames.count > 0 && reloadTopmostLeftmostCellIndex > 0 {
+            let previousRowRightmostCell = normalizedCellFrames[reloadTopmostLeftmostCellIndex - 1]
+            startingYOrigin = previousRowRightmostCell.origin.y + previousRowRightmostCell.height
+        }
+        var newFrames = [CGRect]()
         var loopHeight: CGFloat = startingYOrigin
 
-        for leftmostCellIndex in stride(from: from, to: to, by: columnCount) {
+        for leftmostCellIndex in stride(from: reloadTopmostLeftmostCellIndex, to: cellHeights.count, by: columnCount) {
 
             let rightmostCellIndex = leftmostCellIndex + columnCount - 1
             let maxHeight = calculateMaxHeight(leftmostCellIndex: leftmostCellIndex, tentativeRightmostCellIndex: rightmostCellIndex, cellHeights: cellHeights)
@@ -408,7 +414,6 @@ class NormalizedHeightCollectionViewLayout: UICollectionViewFlowLayout {
                 if cellIndex >= cellHeights.count {
                     break
                 }
-
                 let columnIndexCGFloat = CGFloat(cellIndex).truncatingRemainder(dividingBy: CGFloat(columnCount))
                 let cellAndVerticalSeparatorWidth = cellWidth + verticalSeparatorWidth
                 var x = columnIndexCGFloat * cellAndVerticalSeparatorWidth
@@ -426,11 +431,12 @@ class NormalizedHeightCollectionViewLayout: UICollectionViewFlowLayout {
                 let cellHeight = maxHeight
 
                 let frame = CGRect(x: x, y: y, width: cellWidth, height: cellHeight)
-                frames.append(frame)
+                newFrames.append(frame)
             }
             loopHeight += maxHeight
         }
-        return frames
+        let recalculatedFrames = Array(normalizedCellFrames[0..<reloadTopmostLeftmostCellIndex]) + newFrames
+        return recalculatedFrames
     }
 
     private func calculateMaxHeight(leftmostCellIndex: Int, tentativeRightmostCellIndex: Int, cellHeights: [CGFloat], extraComparisonHeight: CGFloat = 0) -> CGFloat {
@@ -444,21 +450,6 @@ class NormalizedHeightCollectionViewLayout: UICollectionViewFlowLayout {
         }
         let maxCellHeight = ([extraComparisonHeight] + cellHeights[leftmostCellIndex...rightmostCellIndex]).max() ?? 0
         return maxCellHeight
-    }
-
-    private func reloadHeights(from index: Int) {
-        let newMinCellIndex = index
-        let reloadTopmostRowIndex = newMinCellIndex / columnCount
-        let reloadTopmostLeftmostCellIndex = reloadTopmostRowIndex * columnCount
-
-        var startingYOrigin: CGFloat = 0
-        if normalizedCellFrames.count > 0 {
-            let previousRowRightmostCell = normalizedCellFrames[reloadTopmostLeftmostCellIndex - 1]
-            startingYOrigin = previousRowRightmostCell.origin.y + previousRowRightmostCell.height
-        }
-        let recalculatedFrames = calculateNormalizedCellFrames(from: reloadTopmostLeftmostCellIndex, to: cellHeights.count, startingYOrigin: startingYOrigin)
-        let frames = Array(normalizedCellFrames[0..<reloadTopmostLeftmostCellIndex]) + recalculatedFrames
-        normalizedCellFrames = frames
     }
 
     private func frameForCell(at indexPath: IndexPath) -> CGRect {
