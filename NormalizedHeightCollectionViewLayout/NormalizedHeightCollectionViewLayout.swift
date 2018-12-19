@@ -404,6 +404,7 @@ class NormalizedHeightCollectionViewLayout: UICollectionViewFlowLayout {
         }
         var newFrames = [CGRect]()
         var loopHeight: CGFloat = startingYOrigin
+        var batchRowIndex = 0
 
         for leftmostCellIndex in stride(from: reloadTopmostLeftmostCellIndex, to: cellHeights.count, by: columnCount) {
 
@@ -420,13 +421,11 @@ class NormalizedHeightCollectionViewLayout: UICollectionViewFlowLayout {
                 if prefersHorizontallyAttachedCells {
                     x = columnIndexCGFloat * cellWidth
                 }
-
-                let rowIndex = cellIndex / columnCount
                 let totalCellHeightBeforeThisIndex = loopHeight
-                let totalSeparatorHeightBeforeThisIndex = horizontalSeparatorHeight * CGFloat(rowIndex)
-                var y = totalCellHeightBeforeThisIndex + totalSeparatorHeightBeforeThisIndex
+                let totalSeparatorHeightInThisBatchBeforeThisIndex = horizontalSeparatorHeight * CGFloat(batchRowIndex)
+                var y = totalCellHeightBeforeThisIndex + totalSeparatorHeightInThisBatchBeforeThisIndex
                 if prefersVerticallyOverlappingCells {
-                    y = totalCellHeightBeforeThisIndex - totalSeparatorHeightBeforeThisIndex - horizontalSeparatorHeight
+                    y = totalCellHeightBeforeThisIndex - totalSeparatorHeightInThisBatchBeforeThisIndex - horizontalSeparatorHeight
                 }
                 let cellHeight = maxHeight
 
@@ -434,6 +433,7 @@ class NormalizedHeightCollectionViewLayout: UICollectionViewFlowLayout {
                 newFrames.append(frame)
             }
             loopHeight += maxHeight
+            batchRowIndex += 1
         }
         let recalculatedFrames = Array(normalizedCellFrames[0..<reloadTopmostLeftmostCellIndex]) + newFrames
         return recalculatedFrames
