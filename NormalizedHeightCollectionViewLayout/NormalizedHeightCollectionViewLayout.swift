@@ -24,7 +24,7 @@ class NormalizedHeightCollectionViewLayout: UICollectionViewFlowLayout {
     var verticalSeparatorIdentifier: String = "verticalSeparator"
     var horizontalSeparatorIdentifier: String = "horizontalSeparator"
 
-    var models: TrackableArray<HeightCalculableDataSource> = []
+    var models: [HeightCalculableDataSource] = []
 
     private var columnCount: Int = 0
     private var cellWidth: CGFloat = 0

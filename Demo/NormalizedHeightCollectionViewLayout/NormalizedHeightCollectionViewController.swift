@@ -19,8 +19,8 @@ class NormalizedHeightCollectionViewController: UIViewController {
 
     private var models: TrackableArray<HeightCalculableDataSource> = [] {
         didSet {
-            gridLayout.models = models
-            listLayout.models = models
+            gridLayout.models = models.array
+            listLayout.models = models.array
             let mapToIndexPath = { (index: Int) -> IndexPath in
                 return IndexPath(item: index, section: 0)
             }

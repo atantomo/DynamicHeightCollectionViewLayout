@@ -17,7 +17,7 @@ struct TrackableArray<T> {
     }
 
     private (set) var latestChange: Change = Change.set
-    private var array: [T] = [T]()
+    private (set) var array: [T] = []
 
     init(_ array: [T] = []) {
         self.array = array

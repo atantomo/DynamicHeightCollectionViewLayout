@@ -60,6 +60,5 @@ var models: ChangeTracerArray<T> = ChangeTracerArray() { // replace 'T' with you
 
 ## Limitations
 
-The following limitations may be addressed in the future if necessary:
+The following limitation(s) may be addressed in the future if necessary:
 * The layout class can only process one kind of cell
-* The cell models have to be stored in `ChangeTracerArray` instead of the standard `Collection` type
