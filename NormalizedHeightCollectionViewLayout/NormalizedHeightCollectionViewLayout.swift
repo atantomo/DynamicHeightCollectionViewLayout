@@ -439,8 +439,7 @@ class NormalizedHeightCollectionViewLayout: UICollectionViewFlowLayout {
         return recalculatedFrames
     }
 
-    private func calculateMaxHeight(leftmostCellIndex: Int, tentativeRightmostCellIndex: Int, cellHeights: [CGFloat], extraComparisonHeight: CGFloat = 0) -> CGFloat {
-
+    private func calculateMaxHeight(leftmostCellIndex: Int, tentativeRightmostCellIndex: Int, cellHeights: [CGFloat]) -> CGFloat {
         var rightmostCellIndex = tentativeRightmostCellIndex
         let cellLastIndex = cellHeights.count - 1
 
@@ -448,7 +447,7 @@ class NormalizedHeightCollectionViewLayout: UICollectionViewFlowLayout {
         if !cellExistsAtRightmostIndex {
             rightmostCellIndex = cellLastIndex
         }
-        let maxCellHeight = ([extraComparisonHeight] + cellHeights[leftmostCellIndex...rightmostCellIndex]).max() ?? 0
+        let maxCellHeight = (cellHeights[leftmostCellIndex...rightmostCellIndex]).max() ?? 0
         return maxCellHeight
     }
 
